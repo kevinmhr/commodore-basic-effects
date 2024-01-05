@@ -287,7 +287,7 @@ jsr main
 rts
 
 resetspriteleft
-lda #134
+lda #135
 sta spriteindex2
 jsr main 
 
