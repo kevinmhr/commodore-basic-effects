@@ -15,7 +15,8 @@ thingposition2=$80
 thingposition3=$81
 thingpositionh=$79
 increment=$41
-increment2=$42
+increment2=$46
+increment3=$47
 buffer= $76
 zeropagel = $fe
 zeropageh =$ff
@@ -105,10 +106,7 @@ sta $2290,y
  
 lda carchar2,y
 sta $22a0,y
-;lda oppbulletchardata,y
-;sta $22b0,y
-;lda sidebulletchardata,y
-;sta $22b8,y
+ 
 iny
 cpy #8
  
@@ -143,28 +141,16 @@ main
 cli
 
 mainloop        
-      
-
+ 
+  
  ;jsr rollingupsidedown
-    jsr fil60  
+    
+ inc increment
+  lda increment3
+  adc increment3
+  sta increment3
+  jsr fil60  
 
- lda increment2
- adc increment2
-  lda increment2
- 
- adc increment2
- sta increment2
-   lda increment2
- 
- adc increment2
- sta increment2
-   lda increment2
- 
- adc increment2
- sta increment2
- 
-  lda #0
-  sta $d019
 
  jmp mainloop
  
@@ -182,99 +168,15 @@ beq resetchrpages
 
 loop
  
-
-  inc increment2 
-;  ldy increment  
-
-
-;lda thingposition
+ ldx #0
  
  
-; adc sin2,y
-
+loop2
+ clc
+inc zeropagel
  
-;sta thingposition
-  ;bcs inclistcount
-
- 
-;lda listcount
-;sta zeropageh
- 
- ; lda thingposition
-   ; sta zeropagel
-
-;lda #230
-
-;ldy #0
-;sta (zeropagel),y
-;lda zeropagel
-;adc #12
-;sta zeropagel
-;lda #230
- 
-;ldy #0
-;sta (zeropagel),y
- ;jsr movejoy
-jsr move60to40
-
-;jsr drawuntoscreen
- 
-
-;jsr display
- ;jsr drawuntoscreen                
- 
- ;jsr displaythingcolor
-    asl $d019
-    
-         lda $dc0d
-         sta $dd0d
-       ;  lda #$fa
-      ;  sta $d012
-  
- 
-clearsc
-; jsr clear4000
-    
-notclearsc   
-    jmp $ea7e
-     
-        
-rti 
-rts
-resetchrpages
-lda #$19
-sta chrpages
-jmp irq
-
-rts
-
-fil60
-ldx #0
-fil60l
-inc increment
-lda increment2
- 
-sta $6400,x 
-sta $6450,x 
-sta $6500,x 
-sta $6550,x 
-sta $6600,x
-sta $6650,x
-sta $6700,x
-sta $6750,x
-inx
-cpx #255
-bne fil60l
-rts
-move60to40
-ldy #0
-ldx #0
-
-move60to40l
-clc
-
 afterresetcount
-dec zeropagel
+ 
 
 lda listcount
 cmp #7
@@ -282,13 +184,7 @@ beq resetlistcount
 inc listcount
 
 
-
-;lda chrposition
-
- ;adc zeropagel
  
- 
-;sta zeropagel
 lda listcount
 adc #$60
 
@@ -309,40 +205,130 @@ lda buffer
 sta (zeropagel),y
 lda listcount
 
+ 
  lda chrpages
  
 sta zeropageh
+inc increment3
+ 
+lda increment3
+adc increment
+sta increment3
  
  
-lda zeropagel
-adc increment2
-sta zeropagel
-lda increment2
-sta (zeropagel),y
-lda zeropagel
- lda increment2
- adc increment2
- 
-sta increment2
- 
-inx
-cpx #0
- bne move60to40l
+lda (zeropagel),y
+and increment3
  
  
+ sta (zeropagel),y
+ inc zeropagel
+ ror
  
+ sta (zeropagel),y
+ inc zeropagel
+ ror
  
-rts
+ sta (zeropagel),y
+ inc zeropagel
+ ror
+ 
+ sta (zeropagel),y
+ inc zeropagel
 
+ ror
+ 
+ sta (zeropagel),y
+ inc zeropagel
+  
+  
+ ror
+ 
+ sta (zeropagel),y
+ inc zeropagel
+l
+ ror
+ 
+ sta (zeropagel),y
+ inc zeropagel
+  ror
+ 
+ sta (zeropagel),y
+ 
+ inx
+ cpx #255
+ bne loop2
+ 
+ 
+jsr move60to40
+
+ 
+  
+  asl $d019
+    
+         lda $dc0d
+         sta $dd0d
+        lda #$fa
+        sta $d012
+  
+ 
+clearsc
+; jsr clear4000
+    
+notclearsc   
+    jmp $ea7e
+     
+        
+rti 
 resetlistcount
 lda #3
 sta listcount
 
-lda #17
+ 
 
-sta thingposition
-jsr move60to40l
+jsr main 
 rts 
+
+rts
+resetchrpages
+lda #$19
+sta chrpages
+
+
+jmp irq
+
+rts
+
+fil60
+ldx #0
+fil60l
+ inc increment
+lda increment  
+ 
+ 
+sta $6400,x 
+sta $6450,x 
+sta $6500,x 
+sta $6550,x 
+sta $6600,x
+sta $6650,x
+sta $6700,x
+sta $6750,x
+inx
+cpx #255
+bne fil60l
+ 
+
+
+rts
+move60to40
+ 
+
+move60to40l
+
+
+ 
+rts
+ 
 
 
 
