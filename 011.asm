@@ -17,11 +17,11 @@ thingpositionh=$79
 increment=$41
 increment2=$42
 buffer= $76
-zeropagel2 = $fc
-zeropageh2 =$fd
-zeropagel = $fe
-zeropageh =$ff
-rows =$21
+zeropagel2 = $fb
+zeropageh2 =$fc
+zeropagel = $fd
+zeropageh =$fe
+rows =$90
 columns =$78
 xoffset =$20
 
@@ -124,22 +124,24 @@ clear4000
  
 
 ldx #0
+
 clear4000l
- inc increment
+  inc increment
  
 lda increment
+sta $4300,x
 sta $4400,x
 sta $4500,x
 sta $4600,x
 sta $4700,x
-
- 
-
-
+sta $4800,x
+ sta $4900,x
+ sta $4a00,x
+sta $4b00,x
+sta $4c00,x
 inx
 cpx #0
 bne clear4000l
-
 
 
 main
@@ -170,33 +172,28 @@ main
 cli
 
 mainloop        
-    
- 
+
  
  jmp mainloop
  
  
 irq
-  
+   inc xoffset
+ ldx #0   
 
 jsr background
 
- 
+
 
  
 ;jsr movejoy
         
-
- lda rows
- cmp #21
- beq resetrows
- inc rows
- lda xoffset
- cmp #39
- beq resetxoffser
- inc xoffset
  
-   ; asl $d019
+
+ 
+
+ 
+ ;  asl $d019
     
          lda $dc0d
          sta $dd0d
@@ -217,29 +214,34 @@ rti
 background
  
 
-
+lda #0
+sta rows
 bkloop
 
 
-clc
+ 
 ldx rows 
 lda bufferaddressl,x
+
+adc xoffset
+
 sta zeropagel2
 
 lda bufferaddressh,x
 sta zeropageh2 
 
 
-ldx rows 
-lda displayaddressh,x
-sta zeropageh 
+
 lda displayaddressl,x
 
-adc xoffset
+
  
-;adc xoffsetindex,x
+; adc xoffsetindex,x
 sta zeropagel
- 
+ ldx rows 
+lda displayaddressh,x
+sta zeropageh 
+
 ldy #0
 loop2
 
@@ -251,7 +253,10 @@ sta (zeropagel),y
 iny
 cpy #39
 bne loop2
- 
+  inc rows
+ lda rows
+ cmp #25
+ bne bkloop
 rts
 resetxoffser
 lda #0
@@ -261,7 +266,7 @@ jmp $ea7e
 
 rts
 resetrows
-lda #0
+lda #255
 sta rows
  jmp irq
 rts
@@ -474,7 +479,7 @@ bufferaddressl
    !byte <$4400+360,<$4400+400,<$4400+440,<$4400+480
     !byte <$4400+520,<$4400+560,<$4400+600,<$4400+640,<$4400+680
      !byte <$4400+720,<$4400+760,<$4400+800,<$4400+840,<$4400+880
-       !byte <$4400+920,<$4400+960 
+       !byte <$4400+920,<$4400+960,<$4400+1000,<$4400+1040,<$4400+1080, <$4400+1120,<$4400+1160      
 bufferaddressh
 
 
@@ -483,7 +488,7 @@ bufferaddressh
    !byte >$4400+360,>$4400+400,>$4400+440,>$4400+480
     !byte >$4400+520,>$4400+560,>$4400+600,>$4400+640,>$4400+680
      !byte >$4400+720,>$4400+760,>$4400+800,>$4400+840,>$4400+880
-       !byte >$4400+920,>$4400+960 
+       !byte >$4400+920,>$4400+960, >$4400+1000,>$4400+1040,>$4400+1080,>$4400+1120,>$4400+1160     
  
  
 
