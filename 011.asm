@@ -84,9 +84,9 @@ sta thingposition
 
 lda #1
 sta thingpositionh
-lda #$44
+lda #$07
 sta chrpositionh
-lda #20
+lda #120
 sta chrposition	
 lda #0
 lda #60
@@ -172,12 +172,12 @@ main
  
  
 
-
+jsr drawbk
   
 cli
 
 mainloop        
-
+jsr display
  
  
    jmp mainloop
@@ -192,7 +192,7 @@ lda xoffset
 cmp #59
 beq resetxoffsetinc
 
-jsr drawbk
+
 
     jsr movejoy
 
@@ -357,6 +357,73 @@ rts
 
 
 
+display
+clc
+ 
+
+ 
+
+ 
+ lda chrpositionh
+sta zeropageh
+
+lda chrposition
+sta zeropagel
+lda #82
+ldy #0
+sta (zeropagel),y
+
+lda zeropagel
+adc #1
+sta zeropagel
+lda #84
+
+sta (zeropagel),y
+
+ 
+
+lda chrpositionh
+cmp #$04
+beq putscreen1
+cmp #$05
+beq putscreen2
+cmp #$06
+beq putscreen3
+cmp #$07
+beq putscreen4
+
+rts
+putscreen1
+ldx chrposition
+lda #11
+sta $d800,x
+lda #11
+sta $d801,x
+
+rts
+putscreen2
+ldx chrposition
+lda #11
+sta $d900,x
+lda #11
+sta $d901,x
+rts
+putscreen3
+ldx chrposition
+lda #11
+sta $da00,x
+lda #11
+sta $da01,x
+rts
+putscreen4
+ldx chrposition
+lda #11
+sta $db00,x
+lda #11
+sta $db01,x
+rts
+
+
 
  
  
@@ -399,74 +466,48 @@ movejoy
  
 up
 
-sec
-lda chrposition
-
-sbc #40
-sta chrposition
-bcc dechib
-
+ 
 
 
 
 rts
 leftup
-sec
-lda chrposition
-
-sbc #41
-sta chrposition
-bcc dechib
-
+ 
 
 
 
 
 rts
 leftdown
-
-clc
-lda chrposition
-
-adc #39
-sta chrposition
-bcs inchib
-
+ 
 
 
 rts
 
 upright 
-sec
-lda chrposition
-
-sbc #39
-sta chrposition
-bcc dechib
+ 
 rts
 downright 
-clc
-lda chrposition
-
-adc #41
-sta chrposition
-bcs inchib
+ 
 rts
 
 
 
 down
 clc
-lda chrposition
-
-adc #40
-sta chrposition
-bcs inchib
-
+ 
+ 
 
 rts
 
 right 
+lda chrposition
+cmp #130
+beq stopcarr
+
+
+
+
 clc
 lda xoffset
 adc #1
@@ -475,8 +516,19 @@ lda chrposition
 adc #1
 sta chrposition
 bcs inchib
+
+
+jsr drawbk
+
+
+
+
 rts
 left
+
+lda chrposition
+cmp #115
+beq stopcarl
 lda xoffset
 sbc #1
 sta xoffset
@@ -485,11 +537,12 @@ lda chrposition
 sbc #1
 sta chrposition
 bcc dechib
+jsr drawbk
 rts
 inchib
 
 lda chrpositionh
-cmp #$48
+cmp #$08
 beq resethib
 inc chrpositionh
 
@@ -497,21 +550,32 @@ rts
 dechib
 
 lda chrpositionh
-cmp #$43
+cmp #$03
 beq resethibneg
 dec chrpositionh
 
 rts
 resethib
-lda #$44
+lda #$04
 sta chrpositionh
 rts
 
 resethibneg
-lda #$47
+lda #$07
 sta chrpositionh
 rts
- 
+stopcarr
+lda #130
+sta chrposition
+inc xoffset
+jsr drawbk
+rts
+stopcarl
+lda #115
+sta chrposition
+dec xoffset
+jsr drawbk
+rts
 drawbk
  
  
