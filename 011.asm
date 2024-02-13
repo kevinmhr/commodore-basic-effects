@@ -249,14 +249,14 @@ lsr  $d019
         ; sta $dd0d
        lda #$ff
         sta $d012
-  
+
  lda enginesound
  cmp #0
  beq keepenginesound
  lda enginesound
  cmp #255
  beq keepenginesound2
- 
+   dec enginesound
   
   jmp $ea7e
      
@@ -1151,7 +1151,7 @@ flowercan4
 !byte %01010100
 !byte %00111000
 !byte %01010000
-*=$6000
+*=$6000 
 pickups
     !byte 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32    
  !byte 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32 
