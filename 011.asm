@@ -159,7 +159,8 @@ clear4000
 
 ldx #0
  
-
+lda #20
+sta chrpositionh
 
 main
       
@@ -221,8 +222,9 @@ cli
 
 mainloop        
 
+ 
  jsr drawpickups
-
+  
    jmp mainloop
  
 irq
@@ -235,13 +237,11 @@ lda xoffset
 cmp #59
 beq resetxoffsetinc
 
-jsr engine
+
     jsr movejoy
 jsr display
  
-   jsr collision
-socollided
- 
+jsr engine
  
 lsr  $d019
     
@@ -257,7 +257,8 @@ lsr  $d019
  cmp #255
  beq keepenginesound2
    dec enginesound
-  
+   jsr collision
+socollided
   jmp $ea7e
      
         
@@ -440,9 +441,9 @@ clc
  
 
  
-
+ldx chrpositionh
  
- lda chrpositionh
+ lda displayaddressh,x
 sta zeropageh
 
 lda chrposition
@@ -457,50 +458,25 @@ sta zeropagel
 lda #84
 
 sta (zeropagel),y
+ ldx chrpositionh
+ 
+ lda coloraddressh,x
+sta zeropageh
+lda #11
+
+sta (zeropagel),y
+
+lda chrposition
+adc #0
+sta zeropagel
+lda #11
+ 
+sta (zeropagel),y
 
  
 
-lda chrpositionh
-cmp #$04
-beq putscreen1
-cmp #$05
-beq putscreen2
-cmp #$06
-beq putscreen3
-cmp #$07
-beq putscreen4
-
 rts
-putscreen1
-ldx chrposition
-lda #11
-sta $d800,x
-lda #11
-sta $d801,x
-
-rts
-putscreen2
-ldx chrposition
-lda #11
-sta $d900,x
-lda #11
-sta $d901,x
-rts
-putscreen3
-ldx chrposition
-lda #11
-sta $da00,x
-lda #11
-sta $da01,x
-rts
-putscreen4
-ldx chrposition
-lda #11
-sta $db00,x
-lda #11
-sta $db01,x
-rts
-
+ 
 
 
  
@@ -543,11 +519,23 @@ movejoy
 				rts
  
 up
+;lda chrpositionh
+;cmp #0
+;beq resetchrpositionh
+;lda chrpositionh
+;sbc #1
+;sta chrpositionh
+;lda chrposition
+;adc #16
+;sta chrposition
+;jsr drawbk
 
- 
 
-
-
+rts
+resetchrpositionh
+lda #20
+sta chrpositionh
+jsr drawbk
 rts
 leftup
  
@@ -573,7 +561,9 @@ rts
 
 down
 clc
- 
+ lda chrpositionh
+adc #1
+sta chrpositionh
  
 
 rts
