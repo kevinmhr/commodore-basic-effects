@@ -27,6 +27,14 @@ xoffset =$26
 pages = $24
 world = $42
 worldh= $41
+wavefm   =$36
+attdec   =$31
+susrel   =$32
+volume   =$33
+hifreq   =$34
+lofreq   =$35
+voicefreq = $31
+enginesound =$37
 
 *=$0801
         !byte    $1E, $08, $0A, $00, $9E, $20, $28,$32, $30, $38, $30, $29, $3a, $8f, $20, $28, $43, $29, $20, $32, $30, $32, $31, $20, $4D, $54, $53, $56, $00, $00, $00
@@ -212,9 +220,9 @@ jsr drawbk
 cli
 
 mainloop        
-jsr display
- 
- 
+
+ jsr drawpickups
+
    jmp mainloop
  
 irq
@@ -227,12 +235,12 @@ lda xoffset
 cmp #59
 beq resetxoffsetinc
 
- 
+jsr engine
     jsr movejoy
-
+jsr display
  
- 
- 
+   jsr collision
+socollided
  
  
 lsr  $d019
@@ -242,7 +250,12 @@ lsr  $d019
        lda #$ff
         sta $d012
   
- 
+ lda enginesound
+ cmp #0
+ beq keepenginesound
+ lda enginesound
+ cmp #255
+ beq keepenginesound2
  
   
   jmp $ea7e
@@ -251,6 +264,8 @@ lsr  $d019
 rti 
 
 rts
+
+
 
  
 resetworld
@@ -270,7 +285,16 @@ lda #$50
 sta worldh
 jsr backtoroutine
 rts
-
+keepenginesound
+lda #0
+sta enginesound
+ jmp $ea7e
+rts
+keepenginesound2
+lda #255
+sta enginesound
+ jmp $ea7e
+rts
 backgroundcol
 clc
 
@@ -555,6 +579,9 @@ clc
 rts
 
 right 
+inc enginesound
+inc enginesound
+
 lda chrposition
 cmp #130
 beq stopcarr
@@ -574,12 +601,12 @@ bcs inchib
 
 jsr drawbk
 
-
-
+ 
 
 rts
 left
-
+inc enginesound
+inc enginesound
 lda chrposition
 cmp #115
 beq stopcarl
@@ -592,6 +619,8 @@ sbc #1
 sta chrposition
 bcc dechib
 jsr drawbk
+
+
 rts
 inchib
 
@@ -630,8 +659,27 @@ sta chrposition
 dec xoffset
 jsr drawbk
 rts
-drawbk
+
+collision
+ldx chrposition
+inx
+lda $700,x
+
+cmp #207
+ldx chrposition
+dex
+lda $700,x
+cmp #207
+beq collided
+rts
+collided
  
+ 
+
+jsr pickupsnd
+
+rts
+drawbk
  
 lda #1
 sta rows
@@ -751,6 +799,21 @@ jsr backgroundcol
  
 
 rts
+drawpickups
+
+ldy #0
+drawpickupslp
+lda pickups,y
+cmp #32
+beq out
+sta $58f0,y
+out
+iny
+
+cpy #255 
+bne drawpickupslp
+  
+rts
 
  
 xoffsetindex
@@ -813,7 +876,10 @@ bufferaddressh
     !byte >$4400+2295,>$4400+2550,>$4400+2805,>$4400+3060,>$4400+3315,>$4400+3570 
     !byte >$4400+3825,>$4400+4080,>$4400+4335,>$4400+4590,>$4400+4845,>$4400+5100
     !byte >$4400+5355,>$4400+5610,>$4400+5865,>$4400+6120
-   *=$4400
+ 
+ !source "sounds.asm"
+ 
+ *=$4400
 screen1 
  
   
@@ -1085,7 +1151,19 @@ flowercan4
 !byte %01010100
 !byte %00111000
 !byte %01010000
-
+*=$6000
+pickups
+    !byte 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32    
+ !byte 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32 
+  !byte 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32 
+   !byte 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32 
+    !byte 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,207,32,32,32,32,32,32,32,32,32,32,32 
+     !byte 32,32,32,32,32,32,32,32,32,32,32,32,207,32,32,32,32,32,32,32,32,32,32,32,32,32,32,207,32,32,32,32,32 
+      !byte 32,32,32,207,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32 
+       !byte 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32 
+        !byte 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32 
+         !byte 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32 
+ 
 *=$22c8
 
  
