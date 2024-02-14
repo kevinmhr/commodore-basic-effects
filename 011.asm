@@ -22,7 +22,7 @@ zeropageh2 =$fc
 zeropagel = $fd
 zeropageh =$fe
 rows =$25
-columns =$78
+;columns =$78
 xoffset =$26
 pages = $24
 world = $42
@@ -35,6 +35,11 @@ hifreq   =$34
 lofreq   =$35
 voicefreq = $31
 enginesound =$37
+lenght= $40
+lenghth =$44
+worldchar =$39
+worldwidth =$45
+worldy= $46
 
 *=$0801
         !byte    $1E, $08, $0A, $00, $9E, $20, $28,$32, $30, $38, $30, $29, $3a, $8f, $20, $28, $43, $29, $20, $32, $30, $32, $31, $20, $4D, $54, $53, $56, $00, $00, $00
@@ -103,7 +108,7 @@ lda #60
 sta xoffset
 lda #0
 sta rows
-lda #$44
+lda #$45
 sta worldh
 lda #3
 lda #10
@@ -155,15 +160,19 @@ cpy #8
 bne copyflowercanl
 
 clear4000
- 
+lda #20
+sta chrpositionh
 
 ldx #0
  
 lda #20
 sta chrpositionh
+ 
+ldx #0
+
 
 main
-      
+jsr drawpatternlist      
          ; lda #$00
  
    
@@ -183,46 +192,13 @@ main
          sta $d01a
         lda #0
 
-worldroutine
-ldx #0
-worldroutinelp
+        
  
-backtoroutine
-
- lda worldh
-cmp #$57
- beq resetworldh
-inc worldh
-lda world
-cmp #80
- beq resetworld
-lda world
-adc #254
-sta world
-lda worldh
-sta zeropageh2
-lda world
-
-sta zeropagel2
-ldy #0
-lp3
-lda #206
- 
-sta (zeropagel2),y
-iny
-cpy #$3
-bne lp3
-inx
-cpx #255
-  bne worldroutinelp
-
-jsr drawbk
   
 cli
 
 mainloop        
 
- 
  jsr drawpickups
   
    jmp mainloop
@@ -240,9 +216,9 @@ beq resetxoffsetinc
 
     jsr movejoy
 jsr display
- 
+ ; jsr columns
 jsr engine
- 
+
 lsr  $d019
     
         ; lda $dc0d
@@ -266,14 +242,6 @@ rti
 
 rts
 
-
-
- 
-resetworld
-lda #0
-sta world
- jsr backtoroutine
-rts
 resetxoffsetinc
 lda #60
 sta xoffset
@@ -281,11 +249,7 @@ sta xoffset
  jmp $ea7e
 rts
 
-resetworldh
-lda #$50
-sta worldh
-jsr backtoroutine
-rts
+
 keepenginesound
 lda #0
 sta enginesound
@@ -359,6 +323,7 @@ bkloop
 clc
 
 ldx rows
+ 
 
 
 
@@ -693,7 +658,7 @@ jsr background
 jsr backgroundcol
 lda #5
 sta rows
- 
+  jsr drawpattern
 jsr background
 jsr backgroundcol
 lda #6
@@ -868,7 +833,7 @@ bufferaddressh
     !byte >$4400+5355,>$4400+5610,>$4400+5865,>$4400+6120
  
  !source "sounds.asm"
- 
+  !source "012.asm"
  *=$4400
 screen1 
  
@@ -887,7 +852,7 @@ screen1
 !byte 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32
 !byte 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32
 !byte 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,216,250,250
-!byte 250,250,250,250,250,250,250,250,250,250,250,250,250,250,250,250,250,250,250,250,250,250,250,250,250,250,250,250,250,250
+!byte 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32
 !byte 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32
 !byte 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32
 
@@ -977,7 +942,7 @@ screen1
 !byte 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32
 !byte 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32
 !byte 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32
-!byte 229,229,229,229,229,229,229,229,229,229,229,229,229,229,229,229,229,229,229,229,229,229,229,229,229,229,229,229,229,229;
+!byte 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32
 !byte 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32
 !byte 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32
 !byte 32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32
@@ -1209,4 +1174,4 @@ pickups
  !byte  %11100111 
  
  
- 
+
