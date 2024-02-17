@@ -1,6 +1,24 @@
  
 
+drawxline
+ldx worldy
+ldy xstart
+drawxlinelp
+lda bufferaddressl,x
+sta zeropagel
+
+lda bufferaddressh,x
+sta zeropageh
+
+lda worldchar
+sta (zeropagel),y
  
+ 
+iny
+cpy xlength
+bne drawxlinelp
+
+rts
 
  
 drawpattern
@@ -24,22 +42,40 @@ adc worldwidth
 sta zeropagel
 
 inx
-cpx lenght
+cpx length
 bne drawpatternlp
  
 
 rts
 
 drawpatternlist 
-
-
+lda #80
+sta xstart
+lda #170
+sta xlength
+ lda #210
+ sta worldchar
+ 
+ jsr drawxline
+ lda #5
+ sta worldy
+  lda #216
+ sta worldchar
+ jsr drawxline
+  lda #10
+ sta worldy
+ jsr drawxline
+ 
+ 
+ 
+ 
 lda #5
 sta worldwidth
 lda #209
 sta worldchar
 ldy #80
 lda #20
-sta lenght
+sta length
 ldy #181
 
 jsr drawpattern
@@ -49,7 +85,7 @@ lda #211
 sta worldchar
 
 lda #15
-sta lenght
+sta length
 ldy #110
 
 jsr drawpattern
@@ -67,7 +103,7 @@ lda #206
 sta worldchar
 
 lda #15
-sta lenght
+sta length
 ldy #120
 
 jsr drawpattern
@@ -84,7 +120,7 @@ lda #207
 sta worldchar
 
 lda #15
-sta lenght
+sta length
 ldy #130
 
 jsr drawpattern
@@ -101,7 +137,7 @@ lda #209
 sta worldchar
 
 lda #15
-sta lenght
+sta length
 ldy #140
 
 jsr drawpattern
@@ -119,7 +155,7 @@ lda #210
 sta worldchar
 
 lda #15
-sta lenght
+sta length
 ldy #150
 
 jsr drawpattern
@@ -134,4 +170,5 @@ ldy #153
 jsr drawpattern
  jsr drawbk 
  
+
  rts

@@ -35,11 +35,13 @@ hifreq   =$34
 lofreq   =$35
 voicefreq = $31
 enginesound =$37
-lenght= $40
-lenghth =$44
+length= $40
+lengthh =$44
+xlength =$47
 worldchar =$39
 worldwidth =$45
 worldy= $46
+xstart =$48
 
 *=$0801
         !byte    $1E, $08, $0A, $00, $9E, $20, $28,$32, $30, $38, $30, $29, $3a, $8f, $20, $28, $43, $29, $20, $32, $30, $32, $31, $20, $4D, $54, $53, $56, $00, $00, $00
