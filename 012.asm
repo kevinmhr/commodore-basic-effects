@@ -49,7 +49,10 @@ bne drawpatternlp
 rts
 
 drawpatternlist 
-lda #80
+
+lda #0
+sta worldy
+lda #60
 sta xstart
 lda #170
 sta xlength
@@ -172,3 +175,11 @@ jsr drawpattern
  
 
  rts
+ 
+ 
+
+ 
+
+ 
+  
+ 
