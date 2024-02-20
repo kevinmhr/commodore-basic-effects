@@ -1,5 +1,147 @@
+drawlines
+
+
+lda #0
+sta worldy
+drawxlineloop
+
+         
+lda #60
+sta xstart
+lda #80
+sta xlength
+lda #209
+sta worldchar
+
+
+jsr drawxline 
+lda #80
+sta xstart
+lda #140
+sta xlength
+lda #210
+sta worldchar
+jsr drawxline 
+lda #140
+sta xstart
+lda #200
+sta xlength
+lda #217
+sta worldchar
+jsr drawxline 
+lda #200
+sta xstart
+lda #250
+sta xlength
+lda #218
+sta worldchar
+jsr drawxline 
+inc worldy
+lda worldy
+cmp #17
+bne drawxlineloop
+
+
+rts
+character1
+ldy #0
+erase24lp
+ldx #24
+lda displayaddressl,x
+sta zeropagel
+
+lda displayaddressh,x
+sta zeropageh
+lda #32
+sta (zeropagel),y
+iny
+cpy #40
+bne erase24lp
+character1lp
+jsr character1forward
+
+backtoroutinecheck
+clc
+ldx #24
+
+lda displayaddressl,x
+sta zeropagel
+
+lda displayaddressh,x
+sta zeropageh
+
+
+ldy character1xpos
+
+lda #82
+sta (zeropagel),y
+ 
+ ldy character1xpos
+ tya
+ adc #1
+tay
+lda #84
+sta (zeropagel),y
+
+lda coloraddressl,x
+sta zeropagel
+
+lda coloraddressh,x
+sta zeropageh
+
+
+ldy character1xpos
+
+lda #222
+sta (zeropagel),y
+ 
+  ldy character1xpos
+ tya
+ adc #1
+tay
+
+lda #223
+sta (zeropagel),y
+
+ 
+ 
+rts
+charater1trigger 
+lda #0
+sta character1trigger
+
+rts
+charater1triggerback 
+lda #1
+sta character1trigger
+
+rts
+
  
 
+character1backward
+
+lda character1xpos
+cmp #0
+beq charater1trigger 
+
+dec character1xpos
+jsr backtoroutinecheck
+ 
+rts
+
+character1forward
+ 
+lda character1trigger
+cmp #1
+ beq character1backward
+lda character1xpos
+cmp #40
+beq charater1triggerback
+inc character1xpos
+jsr backtoroutinecheck
+
+rts
 drawxline
 ldx worldy
 ldy xstart

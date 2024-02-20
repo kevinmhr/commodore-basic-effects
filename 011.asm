@@ -43,6 +43,11 @@ worldwidth =$45
 worldy= $46
 xstart =$48
 yrepetition =$49
+character1xpos =$50
+character1y =$51
+character1trigger =$52
+
+
 
 *=$0801
         !byte    $1E, $08, $0A, $00, $9E, $20, $28,$32, $30, $38, $30, $29, $3a, $8f, $20, $28, $43, $29, $20, $32, $30, $32, $31, $20, $4D, $54, $53, $56, $00, $00, $00
@@ -95,11 +100,17 @@ stopcpy
       lda $01
          ora #4
          sta $01 
+         
+         
+         lda #20
+         sta character1y
+lda #21
+sta character1xpos
 
 lda #15
 sta thingposition
-
-
+lda #1
+sta character1trigger
 lda #1
 sta thingpositionh
 lda #$07
@@ -174,46 +185,7 @@ sta chrpositionh
  
 ldx #0
 
-
-lda #0
-sta worldy
-drawxlineloop
-
-         
-lda #60
-sta xstart
-lda #80
-sta xlength
-lda #209
-sta worldchar
-
-
-jsr drawxline 
-lda #80
-sta xstart
-lda #140
-sta xlength
-lda #210
-sta worldchar
-jsr drawxline 
-lda #140
-sta xstart
-lda #200
-sta xlength
-lda #217
-sta worldchar
-jsr drawxline 
-lda #200
-sta xstart
-lda #250
-sta xlength
-lda #218
-sta worldchar
-jsr drawxline 
-inc worldy
-lda worldy
-cmp #17
-bne drawxlineloop
+jsr drawlines
 
 main
 jsr drawpatternlist      
@@ -241,13 +213,19 @@ jsr drawpatternlist
 cli
 
 mainloop        
+
+
  jsr drawpickups
+
+ 
    jmp mainloop
  
 irq
 
-
+    
  
+
+
  ldx #0   
 lda xoffset
 cmp #255
@@ -255,23 +233,35 @@ beq resetxoffsetinc
 lda xoffset
 cmp #59
 beq resetxoffsetinc
-
+  
+  
+   jsr character1
+  jsr display
 
     jsr movejoy
-jsr display
+    
+    
+    
+ 
+  
+
+
+
  ; jsr columns
 jsr engine
 
  
  
  
+ 
+ 
 afterlines
-lsr  $d019
-    
-        ; lda $dc0d
-        ; sta $dd0d
+rol  $d019
+  
+          lda $dc0d
+         sta $dd0d
        lda #$ff
-        sta $d012
+       sta $d012
 
  lda enginesound
  cmp #0
@@ -350,7 +340,7 @@ sta (zeropagel),y
 
 
 iny
-cpy #39
+cpy #40
 bne colorloop
 rts
 
@@ -411,7 +401,7 @@ sta (zeropagel),y
 
 
 iny
-cpy #39
+cpy #40
 bne loop2
 
 rts
@@ -464,9 +454,7 @@ lda #82
 ldy #0
 sta (zeropagel),y
 
-lda zeropagel
-adc #1
-sta zeropagel
+ ldy #1
 lda #84
 
 sta (zeropagel),y
@@ -475,12 +463,10 @@ sta (zeropagel),y
  lda coloraddressh,x
 sta zeropageh
 lda #11
-
+ldy #0
 sta (zeropagel),y
 
-lda chrposition
-adc #0
-sta zeropagel
+ ldy #1
 lda #11
  
 sta (zeropagel),y
