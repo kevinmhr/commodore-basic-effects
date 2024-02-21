@@ -39,9 +39,10 @@ rts
 sprites
  
    lda spriteindex2
- lda #195
+ lda #193
  sta $7f8 
-
+lda #192
+sta $7f9
   
 ;sta $7fa
  ;sta $7fb
@@ -129,6 +130,48 @@ jsr sprites
 rts
 
 
+
+ 
+shootl
+ 
+ 
+ 
+ lda $d000
+sta $d002
+lda $d001
+sta $d003
+
+ 
+ 
+shootll
+
+ 
+
+ inc $d002
+  inc $d002
+  inc $d002
+ 
+ 
+ 
+outt
+ 
+ 
+
+ 
+rts 
+shoot
+ 
+
+ 
+
+
+ldy #0
+jsr shootl
+
+rts
+ 
+ 
+ 
 stopcarl
 lda #115
 ;sta chrposition
@@ -160,8 +203,6 @@ sta spriteindex2
  
 
  
-
-rts
 left
 
 sec
@@ -229,6 +270,9 @@ movejoy
  
                
                lda $dc00
+                 cmp #$6f
+                      beq shoot  
+               
               and #15
                                 
                                 cmp #11  
@@ -251,8 +295,7 @@ movejoy
 				beq down
                                 cmp #14   
 				beq up
-				cmp #$6f
-                               
+				     
            
 
         
@@ -471,5 +514,6 @@ collided
 jsr pickupsnd
  
 rts
+
 
 
