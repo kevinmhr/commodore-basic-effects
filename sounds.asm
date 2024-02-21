@@ -32,7 +32,7 @@ soundgo2
          inx
          txa
          sta $d40b
-         jmp socollided
+       
         
         rts
 

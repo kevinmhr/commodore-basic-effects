@@ -131,12 +131,37 @@ rts
 
 stopcarl
 lda #115
-sta chrposition
-dec xoffset
-jsr drawbk
+;sta chrposition
+ldx #0
+lda #6
+sta $d000,x
+
+;dec xoffset
+;jsr drawbk
+ ;jsr storefromleft
 rts
 
+down
+clc
+ lda chrpositionh
+adc #1
+sta chrpositionh
+ ldx #0
+ 
 
+lda $d001,x
+adc #3
+sta $d001,x
+
+rts
+resetspriteright
+lda #128
+sta spriteindex2
+ 
+
+ 
+
+rts
 left
 
 sec
@@ -152,19 +177,29 @@ sec
   ;adc #1
   
   lda chrposition
-  sta spriteindex2
+ ; sta spriteindex2
  
- 
-
 
  
  ldx #0
  
+ 
 lda $d000,x
-sbc #1
+sbc #0
 sta $d000,x
-bcc extendedleft
+;bcc extendedleft
+ 
 
+ 
+lda xoffset
+sbc #1
+sta xoffset
+
+ldx #0
+ 
+ lda $d000,x
+cmp #5
+beq stopcarl
 
 
 
@@ -174,23 +209,24 @@ inc enginesound
 inc enginesound
 lda chrposition
 cmp #115
-beq stopcarl
-lda xoffset
-sbc #1
-sta xoffset
+;beq stopcarl
+
 sec
 lda chrposition
 sbc #1
 sta chrposition
 bcc dechib
+
+
 jsr drawbk
 
-
+storefromleft 
 rts
+
 movejoy 
                 
              
-         
+ 
                
                lda $dc00
               and #15
@@ -236,7 +272,7 @@ up
  ldx #0
  
 lda $d001,x
-sbc #1
+sbc #3
 sta $d001,x
 rts
 
@@ -249,22 +285,26 @@ jsr drawbk
 rts
 leftup
  
-
+jsr left
+jsr up
 
 
 
 rts
 leftdown
  
-
+jsr left
+jsr down
 
 rts
 
 upright 
- 
+jsr up
+jsr right
 rts
 downright 
- 
+jsr down
+jsr right
 rts
 extendedleft
 lda $d010
@@ -276,28 +316,6 @@ sta $d010
 jsr left
 rts
 
-
-down
-clc
- lda chrpositionh
-adc #1
-sta chrpositionh
- ldx #0
- 
-
-lda $d001,x
-adc #1
-sta $d001,x
-
-rts
-resetspriteright
-lda #128
-sta spriteindex2
- 
-
- 
-
-rts
 dechib
 
 lda chrpositionh
@@ -306,6 +324,69 @@ beq resethibneg
 dec chrpositionh
 
 rts
+right 
+
+ clc
+ 
+
+ 
+ 
+ ;;lda spriteindex2
+ ;bcs resetspriteright
+ ;cmp #134
+ ;beq resetspriteright
+
+ ;lda spriteindex2
+ ; adc #1
+ ; sta spriteindex2
+   lda #131
+  sta spriteindex2
+ 
+ ldx #0
+
+lda $d000,x
+adc #1
+sta $d000,x
+ bcs extendedright
+ ldx #0
+ 
+ lda $d000,x
+ cmp #160
+ beq stopcarr
+
+
+
+
+
+inc enginesound
+inc enginesound
+
+lda chrposition
+cmp #130
+;beq stopcarr
+
+
+
+
+clc
+lda xoffset
+adc #1
+sta xoffset
+lda chrposition
+adc #1
+sta chrposition
+bcs inchib
+
+
+jsr drawbk
+
+ 
+
+rts
+
+
+
+
 extendedright
 lda #%00000001
 sta $d010
@@ -326,69 +407,21 @@ jmp sprites
 rts
 
 
-right 
 
- clc
- 
-
- 
- 
- ;;lda spriteindex2
- ;bcs resetspriteright
- ;cmp #134
- ;beq resetspriteright
-
- ;lda spriteindex2
- ; adc #1
- ; sta spriteindex2
-   lda #131
-  sta spriteindex2
- 
- ldx #0
- 
-lda $d000,x
-adc #1
-sta $d000,x
-bcs extendedright
-
-
-
-
-
-
-inc enginesound
-inc enginesound
-
-lda chrposition
-cmp #130
-beq stopcarr
-
-
-
-
-clc
-lda xoffset
-adc #1
-sta xoffset
-lda chrposition
-adc #1
-sta chrposition
-bcs inchib
-
-
-jsr drawbk
- jmp $ea7e
- 
-
-rts
 
 
 
 stopcarr
-lda #130
-sta chrposition
+;lda #130
+;sta chrposition
+
+;jsr drawbk
+lda #159
+sta $d000,x
+
 inc xoffset
 jsr drawbk
+
 rts
 inchib
 

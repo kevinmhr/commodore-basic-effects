@@ -259,12 +259,12 @@ mainloop
 
   jsr sprites
  jsr drawpickups
-
+ jsr character1
    jmp mainloop
  
 irq
 
-   
+    
  
 
 
@@ -278,8 +278,8 @@ beq resetxoffsetinc
 
  
   
-   jsr character1
-  jsr display
+  jsr right
+ ; jsr display
 
     jsr movejoy
     
@@ -294,12 +294,12 @@ beq resetxoffsetinc
 jsr engine
 
  
-   jsr collision 
+ 
  
  
  
 afterlines
-rol  $d019
+lsr  $d019
   
           lda $dc0d
          sta $dd0d
@@ -313,7 +313,7 @@ rol  $d019
  cmp #255
  beq keepenginesound2
    dec enginesound
- 
+  jsr collision 
 socollided
   jmp $ea7e
      
