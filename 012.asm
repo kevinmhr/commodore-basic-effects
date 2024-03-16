@@ -1,3 +1,42 @@
+
+
+
+
+
+drawlinespg2
+
+
+lda #0
+sta worldy
+drawxlinepg2loop
+
+
+
+lda #105
+sta xstart
+lda #220
+sta xlength
+
+lda #166
+sta worldchar
+
+jsr drawxlinepg2
+
+inc worldy
+lda worldy
+cmp #17
+bne drawxlinepg2loop
+
+
+rts
+
+
+
+
+
+
+
+
 drawlines
 
 
@@ -10,11 +49,17 @@ lda #60
 sta xstart
 lda #80
 sta xlength
-lda #209
+
+lda #166
+sta worldchar
+
+jsr drawxline
+
+ 
+lda #166
 sta worldchar
 
 
-jsr drawxline 
 lda #80
 sta xstart
 lda #140
@@ -33,7 +78,7 @@ lda #200
 sta xstart
 lda #250
 sta xlength
-lda #218
+lda #223
 sta worldchar
 jsr drawxline 
 inc worldy
@@ -43,43 +88,182 @@ bne drawxlineloop
 
 
 rts
-character1
-ldy #0
-erase24lp
-ldx #24
+
+erasure
+
+ldx #0
+
+erasurel
+
 lda displayaddressl,x
 sta zeropagel
 
 lda displayaddressh,x
 sta zeropageh
+ldy #0
+
+erasurel2
 lda #32
 sta (zeropagel),y
-iny
-cpy #40
-bne erase24lp
-character1lp
-jsr character1forward
+ 
+  iny
+ cpy #39
+ bne erasurel2
+inx
+cpx #16
+bne erasurel
 
-backtoroutinecheck
+rts
+ 
+ 
+column1rout
+ldx #0
+lda #0
+sta columncount
+checky2
+
+
 clc
-ldx #24
 
+
+
+
+ldy columncount
+ldx alienarrayy,y
+lda #2
+adc character1xpos
+sta arraypoints
+jsr character1lp
+inc columncount
+lda columncount
+cmp #6
+bne checky2
+
+
+rts
+
+column2rout
+
+ldx #0
+lda #0
+sta columncount
+
+checky3
+
+clc
+ldy columncount
+
+lda #7
+ldx alienarrayy,y
+adc character1xpos
+sta arraypoints
+jsr character1lp
+inc columncount
+lda columncount
+cmp #6
+bne checky3
+rts
+
+
+column3rout
+ldx #0
+
+lda #0
+sta columncount
+checky4
+
+clc
+ldy columncount
+
+lda #12
+ldx alienarrayy,y
+adc character1xpos
+sta arraypoints
+jsr character1lp
+inc columncount
+lda columncount
+cmp #6
+bne checky4
+rts
+
+
+
+column4rout
+ldx #0
+lda #0
+sta columncount
+
+checky5
+
+clc
+ldy columncount
+
+lda #17
+ldx alienarrayy,y
+adc character1xpos
+sta arraypoints
+jsr character1lp
+inc columncount
+lda columncount
+cmp #6
+bne checky5
+
+rts
+column5rout
+ldx #0
+
+lda #0
+sta columncount
+checky6
+ldy columncount
+
+ldx alienarrayy,y
+clc
+lda #22
+
+adc character1xpos
+sta arraypoints
+jsr character1lp
+inc columncount
+lda columncount
+cmp #6
+bne checky6
+ 
+ 
+
+rts
+character1lp
+
+
+
+
+
+ 
+
+ 
+;lda alienarrayy,x
+;tax
+
+  
+
+clc
+
+
+ldy arraypoints
 lda displayaddressl,x
 sta zeropagel
 
 lda displayaddressh,x
 sta zeropageh
-
-
-ldy character1xpos
+ 
 
 lda #82
 sta (zeropagel),y
  
- ldy character1xpos
+
  tya
- adc #1
-tay
+  adc #1
+ tay
 lda #84
 sta (zeropagel),y
 
@@ -90,19 +274,18 @@ lda coloraddressh,x
 sta zeropageh
 
 
-ldy character1xpos
+ 
 
 lda #222
 sta (zeropagel),y
- 
-  ldy character1xpos
  tya
- adc #1
-tay
+  adc #1
+ tay
+ 
+ 
 
 lda #223
 sta (zeropagel),y
-
  
  
 rts
@@ -122,7 +305,7 @@ rts
 character1backward
 
 lda character1xpos
-cmp #0
+cmp #1
 beq charater1trigger 
 
 dec character1xpos
@@ -136,7 +319,7 @@ lda character1trigger
 cmp #1
  beq character1backward
 lda character1xpos
-cmp #40
+cmp #15
 beq charater1triggerback
 inc character1xpos
 jsr backtoroutinecheck
@@ -161,7 +344,26 @@ cpy xlength
 bne drawxlinelp
 
 rts
+drawxlinepg2
+ldx worldy
+ldy xstart
+drawxlinepg2lp
+lda bufferaddressl,x
+sta zeropagel
+clc
+lda bufferaddressh,x
+adc #$17
+sta zeropageh
 
+lda worldchar
+sta (zeropagel),y
+ 
+ 
+iny
+cpy xlength
+bne drawxlinepg2lp
+
+rts
  
 drawpattern
 ldx worldy
@@ -196,15 +398,15 @@ lda #0
 sta worldy
 lda #60
 sta xstart
-lda #170
+lda #250
 sta xlength
- lda #210
+ lda #212
  sta worldchar
  
  jsr drawxline
  lda #5
  sta worldy
-  lda #216
+  lda #223
  sta worldchar
  jsr drawxline
   lda #10
@@ -213,17 +415,22 @@ sta xlength
  
  
  
- 
+   lda #1
+ sta worldy
 lda #5
 sta worldwidth
-lda #209
+lda #199
 sta worldchar
-ldy #80
-lda #20
+ldy #60
+lda #10
 sta length
 ldy #181
 
 jsr drawpattern
+ldy #170
+
+jsr drawpattern
+
 lda #10
 sta worldy
 lda #211
@@ -323,5 +530,18 @@ jsr drawpattern
  
 
  
+
+
+
+
+
+
+
+
+
+
+
+
+
   
  

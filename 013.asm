@@ -39,7 +39,7 @@ rts
 sprites
  
    lda spriteindex2
- lda #193
+ ;lda #193
  sta $7f8 
 lda #192
 sta $7f9
@@ -131,47 +131,52 @@ rts
 
 
 
- 
-shootl
- 
- 
- 
- lda $d000
-sta $d002
-lda $d001
-sta $d003
+shootlogic
 
- 
- 
-shootll
 
- 
-
- inc $d002
-  inc $d002
-  inc $d002
- 
- 
- 
-outt
- 
- 
-
- 
-rts 
-shoot
- 
 
  
 
 
-ldy #0
-jsr shootl
+lda shoottrigger
+cmp #1
+beq shootstandby
 
+lda $d003
+cmp #0
+beq shootoff 
+dec $d003
+dec $d003
+dec $d003
+bypassshoot
 rts
  
+
  
+shootoff
+lda #1
+sta shoottrigger
  
+rts
+shootstandby
+
+lda $d000
+ sta $d002
+lda $d001
+ sta $d003
+jsr bypassshoot
+rts  
+ 
+
+
+ 
+shoot 
+
+lda #0
+sta shoottrigger
+rts
+ 
+
 stopcarl
 lda #115
 ;sta chrposition
@@ -202,12 +207,12 @@ lda #128
 sta spriteindex2
  
 
- 
-left
 
+left
+ lda #194
+sta spriteindex2
 sec
 
-;lda spriteindex2
  
  ;cmp #140
  ;beq resetspriteleft
@@ -226,9 +231,9 @@ sec
  
  
 lda $d000,x
-sbc #0
+sbc #1
 sta $d000,x
-;bcc extendedleft
+ bcc extendedleft
  
 
  
@@ -240,7 +245,7 @@ ldx #0
  
  lda $d000,x
 cmp #5
-beq stopcarl
+;beq stopcarl
 
 
 
@@ -259,7 +264,7 @@ sta chrposition
 bcc dechib
 
 
-jsr drawbk
+;jsr drawbk
 
 storefromleft 
 rts
@@ -324,7 +329,7 @@ rts
 resetchrpositionh
 lda #20
 sta chrpositionh
-jsr drawbk
+;jsr drawbk
 rts
 leftup
  
@@ -382,7 +387,7 @@ right
  ;lda spriteindex2
  ; adc #1
  ; sta spriteindex2
-   lda #131
+   lda #193
   sta spriteindex2
  
  ldx #0
@@ -395,7 +400,7 @@ sta $d000,x
  
  lda $d000,x
  cmp #160
- beq stopcarr
+ ;beq stopcarr
 
 
 
@@ -421,7 +426,7 @@ sta chrposition
 bcs inchib
 
 
-jsr drawbk
+;jsr drawbk
 
  
 
@@ -438,7 +443,8 @@ rts
 
 extendleft
 
-
+ lda #194
+sta spriteindex2
 
 lda #%00000000
 sta $d010
@@ -463,7 +469,7 @@ lda #159
 sta $d000,x
 
 inc xoffset
-jsr drawbk
+;jsr drawbk
 
 rts
 inchib
