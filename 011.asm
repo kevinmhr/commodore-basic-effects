@@ -180,6 +180,8 @@ sta worldh
 lda #3
 lda #10
 sta world
+
+lda #2
 sta $d020
 lda #0
 sta $d021
@@ -346,7 +348,7 @@ rol  $d019
  cmp #255
  beq keepenginesound2
    dec enginesound
-  jsr collision 
+ 
 socollided
 
     
@@ -1478,5 +1480,6 @@ spritedata !byte  %00000000,%00000000,%00000000
            !byte  %00000000,%00000000,%00000000
 alienarrayx 
            !byte 5,10,15,20,25,30
-alienarrayy 
-           !byte 3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45        
+alienarrayy
+           !byte 3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45     
+ 

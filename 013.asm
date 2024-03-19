@@ -141,10 +141,23 @@ shootlogic
 lda shoottrigger
 cmp #1
 beq shootstandby
-
+lda $d003
+cmp #1
+beq shootoff 
 lda $d003
 cmp #0
 beq shootoff 
+lda $d003
+cmp #2
+beq shootoff 
+lda $d003
+cmp #3
+beq shootoff 
+lda $d003
+cmp #4
+beq shootoff 
+dec $d003
+dec $d003
 dec $d003
 dec $d003
 dec $d003
@@ -174,6 +187,7 @@ shoot
 
 lda #0
 sta shoottrigger
+jsr tickingsound
 rts
  
 
@@ -356,7 +370,7 @@ jsr right
 rts
 extendedleft
 lda $d010
-cmp #%00000001
+cmp #%00000011
 beq extendleft
 
 lda #%00000001
@@ -436,7 +450,7 @@ rts
 
 
 extendedright
-lda #%00000001
+lda #%00000011
 sta $d010
 jsr right
 rts
@@ -501,25 +515,7 @@ rts
 
 
 
-collision
-ldx chrposition
-inx
-lda $700,x
-
-cmp #207
-ldx chrposition
-dex
-lda $700,x
-cmp #207
- beq collided
-rts
-collided
  
- 
-
-jsr pickupsnd
- 
-rts
 
 
 
