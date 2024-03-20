@@ -43,8 +43,8 @@ sprites
  sta $7f8 
 lda #192
 sta $7f9
-  
-;sta $7fa
+   lda #148
+  sta $7fa
  ;sta $7fb
  ;sta $7fc
  ; sta $7fd

@@ -130,16 +130,53 @@ clc
 
 ldy columncount
 ldx alienarrayy,y
+ 
+ 
+
+
+
 lda #2
 adc character1xpos
+
 sta arraypoints
+jsr collided1
+ 
 jsr character1lp
 inc columncount
 lda columncount
-cmp #6
+cmp column1
 bne checky2
 
 
+rts
+collided1
+ldy column1
+
+lda $d003
+
+lsr
+lsr
+lsr
+ 
+ 
+
+cmp alienarrayy,y
+
+
+beq collided11
+rts
+collided11
+lda $d002
+lsr
+lsr
+lsr
+ 
+ 
+cmp arraypoints
+beq collided111
+rts
+collided111
+dec column1
 rts
 
 column2rout
@@ -157,13 +194,48 @@ lda #7
 ldx alienarrayy,y
 adc character1xpos
 sta arraypoints
+ 
+jsr collided2
+
 jsr character1lp
 inc columncount
 lda columncount
-cmp #6
+cmp column2
 bne checky3
 rts
+collided2
 
+ldy column2
+lda $d003
+
+lsr
+lsr
+lsr
+ 
+
+cmp alienarrayy,y
+
+
+beq collided12
+rts
+collided12
+
+
+lda $d002
+lsr
+lsr
+lsr
+ 
+cmp arraypoints
+beq collided122
+rts
+collided122
+dec column2
+rts
+
+
+
+ 
 
 column3rout
 ldx #0
@@ -179,13 +251,40 @@ lda #12
 ldx alienarrayy,y
 adc character1xpos
 sta arraypoints
+ 
+jsr collided3
 jsr character1lp
 inc columncount
 lda columncount
-cmp #6
+cmp column3
 bne checky4
 rts
+collided3
 
+ldy column3
+lda $d003
+
+lsr
+lsr
+lsr
+ 
+cmp alienarrayy,y
+
+
+beq collided13
+rts
+collided13
+lda $d002
+lsr
+lsr
+lsr
+ 
+cmp arraypoints
+beq collided133
+rts
+collided133
+dec column3
+rts
 
 
 column4rout
@@ -202,13 +301,42 @@ lda #17
 ldx alienarrayy,y
 adc character1xpos
 sta arraypoints
+ jsr collided4
 jsr character1lp
 inc columncount
 lda columncount
-cmp #6
+cmp column4
 bne checky5
 
 rts
+collided4
+ldy column4
+
+lda $d003
+
+lsr
+lsr
+lsr
+ 
+
+cmp alienarrayy,y
+
+
+beq collided14
+rts
+collided14
+lda $d002
+lsr
+lsr
+lsr
+ 
+cmp arraypoints
+beq collided144
+rts
+collided144
+dec column4
+rts
+
 column5rout
 ldx #0
 
@@ -223,15 +351,44 @@ lda #22
 
 adc character1xpos
 sta arraypoints
+ jsr collided5
 jsr character1lp
 inc columncount
 lda columncount
-cmp #6
+cmp column5
 bne checky6
  
  
 
 rts
+collided5
+ldy column5
+
+lda $d003
+
+lsr
+lsr
+lsr
+
+
+cmp alienarrayy,y
+
+
+beq collided15
+rts
+collided15
+lda $d002
+lsr
+lsr
+lsr
+ 
+cmp arraypoints
+beq collided155
+rts
+collided155
+dec column5
+rts
+
 character1lp
 
 
@@ -276,7 +433,7 @@ sta zeropageh
 
  
 
-lda #222
+lda #7
 sta (zeropagel),y
  tya
   adc #1
@@ -284,7 +441,7 @@ sta (zeropagel),y
  
  
 
-lda #223
+lda #7
 sta (zeropagel),y
  
  
@@ -528,11 +685,58 @@ jsr drawpattern
  
 
  
+resetcolumns
 
+ lda column1
+ cmp #0
+ beq resetcolumn1
+ 
+ lda column2
+ cmp #0
+ beq resetcolumn2
+ 
+ lda column3
+ cmp #0
+ beq resetcolumn3
+ 
+ lda column4
+ cmp #0
+ beq resetcolumn4
+ 
+ lda column5
+ cmp #0
+ beq resetcolumn5
  
 
 
+rts
 
+resetcolumn1
+lda #6
+sta column1
+
+rts
+
+resetcolumn2
+lda #6
+sta column2
+
+rts
+resetcolumn3
+lda #6
+sta column3
+
+rts
+resetcolumn4
+lda #6
+sta column4
+
+rts
+resetcolumn5
+lda #6
+sta column5
+
+rts
 
 
 
