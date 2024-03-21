@@ -110,7 +110,7 @@ sta (zeropagel),y
  cpy #39
  bne erasurel2
 inx
-cpx #16
+cpx #23
 bne erasurel
 
 rts
@@ -485,9 +485,15 @@ sta (zeropagel),y
  
 rts
 charater1trigger 
+
+ldx #0
+character1triggerlp
 lda #0
 sta character1trigger
-
+;inc alienarrayy,x
+;inx
+;cpx #6
+;bne character1triggerlp
 rts
 charater1triggerback 
 lda #1
@@ -504,12 +510,17 @@ cmp #1
 beq charater1trigger 
 
 dec character1xpos
-jsr backtoroutinecheck
+ lda character1xpos
+ sta character1xpostemp
+lda character1xpostemp
+adc #2
+sta character1xpostemp
+  
  
 rts
 
 character1forward
- 
+
 lda character1trigger
 cmp #1
  beq character1backward
@@ -517,8 +528,9 @@ lda character1xpos
 cmp #15
 beq charater1triggerback
 inc character1xpos
-jsr backtoroutinecheck
-
+  lda character1xpos
+ sta character1xpostemp
+ 
 rts
 drawxline
 ldx worldy
@@ -728,23 +740,33 @@ resetcolumns
  lda column1
  cmp #0
  beq resetcolumn1
- 
+  lda column1
+ cmp #255
+ beq resetcolumn1
  lda column2
  cmp #0
  beq resetcolumn2
- 
+  lda column2
+ cmp #255
+ beq resetcolumn2
  lda column3
  cmp #0
  beq resetcolumn3
- 
+  lda column3
+ cmp #255
+ beq resetcolumn3
  lda column4
  cmp #0
  beq resetcolumn4
- 
+  lda column4
+ cmp #255
+ beq resetcolumn4
  lda column5
  cmp #0
  beq resetcolumn5
- 
+  lda column5
+ cmp #255
+ beq resetcolumn5
 
 
 rts

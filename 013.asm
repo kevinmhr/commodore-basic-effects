@@ -156,35 +156,21 @@ beq shootoff
 lda $d003
 cmp #4
 beq shootoff 
+lda $d003
+cmp #255
+beq shootoff 
 dec $d003
 dec $d003
 dec $d003
 dec $d003
 dec $d003
+dec $d003
+dec $d003
+ 
+jsr collisionmain
 
-jsr resetcolumns
-lda #2
-adc character1xpos
-sta arraypoints
-jsr collided1
-lda #7
-adc character1xpos
-sta arraypoints
-jsr collided2
-lda #12
-adc character1xpos
-sta arraypoints
-jsr collided3
-lda #17
-adc character1xpos
-sta arraypoints
-jsr collided4
-lda #22
-adc character1xpos
-sta arraypoints
-jsr collided5
-bypassshoot
 rts
+
  
 
  
@@ -319,23 +305,23 @@ movejoy
                                 cmp #11  
 				beq left
                                 cmp #10  
-				beq leftup
+				;beq leftup
                             
 
                                   cmp #9  
-				beq leftdown 
+				;beq leftdown 
 				cmp #6  
 				beq upright
-                                   cmp #5 
-				beq downright
+             ;                      cmp #5 
+				;beq downright
 
 
 				cmp #7   
 				beq right
 				cmp #13   
-				beq down
+				;beq down
                                 cmp #14   
-				beq up
+			;	beq up
 				     
            
 
@@ -529,7 +515,52 @@ rts
 
 
 
+collisionmain
+lda #2
+adc character1xpostemp
+sta arraypoints
+jsr collided1
+lda #7
+adc character1xpostemp
+sta arraypoints
+jsr collided2
+lda #12
+adc character1xpostemp
+sta arraypoints
+jsr collided3
+lda #17
+adc character1xpostemp
+sta arraypoints
+jsr collided4
+lda #22
+adc character1xpostemp
+sta arraypoints
+jsr collided5
+lda #3
+adc character1xpostemp
+sta arraypoints
+jsr collided1
+lda #8
+adc character1xpostemp
+sta arraypoints
+jsr collided2
+lda #13
+adc character1xpostemp
+sta arraypoints
+jsr collided3
+lda #18
+adc character1xpostemp
+sta arraypoints
+jsr collided4
+lda #23
+adc character1xpostemp
+sta arraypoints
+jsr collided5
 
+jsr resetcolumns
+
+bypassshoot
+rts
 
 
 
