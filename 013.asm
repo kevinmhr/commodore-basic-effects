@@ -161,6 +161,28 @@ dec $d003
 dec $d003
 dec $d003
 dec $d003
+
+jsr resetcolumns
+lda #2
+adc character1xpos
+sta arraypoints
+jsr collided1
+lda #7
+adc character1xpos
+sta arraypoints
+jsr collided2
+lda #12
+adc character1xpos
+sta arraypoints
+jsr collided3
+lda #17
+adc character1xpos
+sta arraypoints
+jsr collided4
+lda #22
+adc character1xpos
+sta arraypoints
+jsr collided5
 bypassshoot
 rts
  

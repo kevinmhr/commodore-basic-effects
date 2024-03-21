@@ -139,7 +139,7 @@ lda #2
 adc character1xpos
 
 sta arraypoints
-jsr collided1
+ 
  
 jsr character1lp
 inc columncount
@@ -176,7 +176,17 @@ cmp arraypoints
 beq collided111
 rts
 collided111
+
+
+lda $d000
+ sta $d002
+lda $d001
+ sta $d003
+
+
 dec column1
+jsr pickupsnd
+
 rts
 
 column2rout
@@ -195,8 +205,7 @@ ldx alienarrayy,y
 adc character1xpos
 sta arraypoints
  
-jsr collided2
-
+ 
 jsr character1lp
 inc columncount
 lda columncount
@@ -230,7 +239,15 @@ cmp arraypoints
 beq collided122
 rts
 collided122
+lda $d000
+ sta $d002
+lda $d001
+ sta $d003
+
+
 dec column2
+jsr pickupsnd
+
 rts
 
 
@@ -252,7 +269,6 @@ ldx alienarrayy,y
 adc character1xpos
 sta arraypoints
  
-jsr collided3
 jsr character1lp
 inc columncount
 lda columncount
@@ -283,7 +299,15 @@ cmp arraypoints
 beq collided133
 rts
 collided133
+
+lda $d000
+ sta $d002
+lda $d001
+ sta $d003
+
 dec column3
+jsr pickupsnd
+
 rts
 
 
@@ -301,7 +325,7 @@ lda #17
 ldx alienarrayy,y
 adc character1xpos
 sta arraypoints
- jsr collided4
+ 
 jsr character1lp
 inc columncount
 lda columncount
@@ -334,7 +358,14 @@ cmp arraypoints
 beq collided144
 rts
 collided144
+lda $d000
+ sta $d002
+lda $d001
+ sta $d003
+
 dec column4
+
+jsr pickupsnd
 rts
 
 column5rout
@@ -351,7 +382,7 @@ lda #22
 
 adc character1xpos
 sta arraypoints
- jsr collided5
+ 
 jsr character1lp
 inc columncount
 lda columncount
@@ -386,7 +417,14 @@ cmp arraypoints
 beq collided155
 rts
 collided155
+lda $d000
+ sta $d002
+lda $d001
+ sta $d003
+
 dec column5
+jsr pickupsnd
+
 rts
 
 character1lp

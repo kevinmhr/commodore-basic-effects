@@ -73,16 +73,16 @@ tickingsound
          jsr soundend3
          lda #%00000001 ; 0 9
          sta attdec
-         lda #%00000001 ; 0 0
+         lda #%00000011 ; 0 0
          sta susrel
          lda #15        ; 15
          sta volume
       
-         lda #100; 12
+         lda #80; 12
          sta hifreq
-         lda #110      ; 8
+         lda #80      ; 8
          sta lofreq
-         lda #32   ; 32 saw
+         lda #32 ; 32 saw
          sta wavefm
 
          jsr soundgo3

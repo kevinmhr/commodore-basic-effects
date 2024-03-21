@@ -299,8 +299,6 @@ backtoroutinecheck
 irq
 
 
- jsr resetcolumns
-
 
  ldx #0   
 lda xoffset
