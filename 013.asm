@@ -311,7 +311,7 @@ movejoy
                                   cmp #9  
 				;beq leftdown 
 				cmp #6  
-				beq upright
+				;beq upright
              ;                      cmp #5 
 				;beq downright
 
