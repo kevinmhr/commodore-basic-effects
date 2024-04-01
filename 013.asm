@@ -101,7 +101,7 @@ resetspriteindex
 lda #0
 sta spriteindex
 
-jmp $ea7e
+;jmp $ea7e
 
 rts
 

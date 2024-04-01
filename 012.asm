@@ -94,6 +94,19 @@ erasure
 ldx #0
 
 erasurel
+ 
+
+lda bufferaddressl,x
+
+sta zeropagel2
+
+lda bufferaddressh,x
+ 
+sta zeropageh2 
+lda zeropagel2
+adc #100 
+sta zeropagel2
+
 
 lda displayaddressl,x
 sta zeropagel
@@ -103,16 +116,15 @@ sta zeropageh
 ldy #0
 
 erasurel2
-lda #32
+lda (zeropagel2),y
 sta (zeropagel),y
  
   iny
  cpy #39
  bne erasurel2
 inx
-cpx #23
+cpx #24
 bne erasurel
-
 rts
  
  
@@ -182,7 +194,8 @@ lda $d000
  sta $d002
 lda $d001
  sta $d003
-
+lda #1
+sta shoottrigger
 
 dec column1
 jsr pickupsnd
@@ -244,7 +257,8 @@ lda $d000
 lda $d001
  sta $d003
 
-
+lda #1
+sta shoottrigger
 dec column2
 jsr pickupsnd
 
@@ -304,7 +318,8 @@ lda $d000
  sta $d002
 lda $d001
  sta $d003
-
+lda #1
+sta shoottrigger
 dec column3
 jsr pickupsnd
 
@@ -364,7 +379,8 @@ lda $d001
  sta $d003
 
 dec column4
-
+lda #1
+sta shoottrigger
 jsr pickupsnd
 rts
 
@@ -421,7 +437,8 @@ lda $d000
  sta $d002
 lda $d001
  sta $d003
-
+lda #1
+sta shoottrigger
 dec column5
 jsr pickupsnd
 
@@ -456,12 +473,10 @@ lda #82
 sta (zeropagel),y
  
 
- tya
-  adc #1
- tay
+iny
 lda #84
 sta (zeropagel),y
-
+ldy arraypoints
 lda coloraddressl,x
 sta zeropagel
 
@@ -471,15 +486,14 @@ sta zeropageh
 
  
 
-lda #7
+lda #4
 sta (zeropagel),y
- tya
-  adc #1
- tay
+clc
+iny
  
  
 
-lda #7
+lda #4
 sta (zeropagel),y
  
  
@@ -504,7 +518,9 @@ rts
  
 
 character1backward
-
+clc
+ldx #0
+character1backward1
 lda character1xpos
 cmp #1
 beq charater1trigger 
@@ -515,11 +531,16 @@ dec character1xpos
 lda character1xpostemp
 adc #2
 sta character1xpostemp
-  
+inx
+cpx #1
+bne character1backward1 
  
 rts
 
 character1forward
+clc
+ldx #0
+character1forward1
 
 lda character1trigger
 cmp #1
@@ -530,6 +551,10 @@ beq charater1triggerback
 inc character1xpos
   lda character1xpos
  sta character1xpostemp
+inx
+cpx #1
+bne character1forward1
+ 
  
 rts
 drawxline
@@ -801,7 +826,44 @@ rts
 
 
 
+erasurecolor
 
+ldx #0
+
+erasurecolorl
+ 
+
+lda bufferaddressl,x
+
+sta zeropagel2
+
+lda bufferaddressh,x
+ 
+sta zeropageh2 
+lda zeropagel2
+adc xoffset
+sta zeropagel2
+
+
+
+lda coloraddressl,x
+sta zeropagel
+
+lda coloraddressh,x
+sta zeropageh
+erasurecolorl2
+lda (zeropagel2),y
+sta (zeropagel),y
+ 
+  iny
+ cpy #39
+ bne erasurecolorl2
+inx
+cpx #23
+bne erasurecolorl
+
+
+rts
 
 
 
