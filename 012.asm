@@ -96,16 +96,16 @@ ldx #0
 erasurel
  
 
-lda bufferaddressl,x
+;lda bufferaddressl,x
 
-sta zeropagel2
+;sta zeropagel2
 
-lda bufferaddressh,x
+;lda bufferaddressh,x
  
-sta zeropageh2 
-lda zeropagel2
-adc #100 
-sta zeropagel2
+;sta zeropageh2 
+;lda zeropagel2
+;adc #100 
+;sta zeropagel2
 
 
 lda displayaddressl,x
@@ -117,6 +117,7 @@ ldy #0
 
 erasurel2
 lda (zeropagel2),y
+lda #32
 sta (zeropagel),y
  
   iny
@@ -486,14 +487,14 @@ sta zeropageh
 
  
 
-lda #4
+lda #6
 sta (zeropagel),y
 clc
 iny
  
  
 
-lda #4
+lda #6
 sta (zeropagel),y
  
  
