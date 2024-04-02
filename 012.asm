@@ -220,7 +220,7 @@ adc character1xpos
 sta arraypoints
  
  
-jsr character1lp
+jsr character2lp
 inc columncount
 lda columncount
 cmp column2
@@ -284,7 +284,7 @@ ldx alienarrayy,y
 adc character1xpos
 sta arraypoints
  
-jsr character1lp
+jsr character3lp
 inc columncount
 lda columncount
 cmp column3
@@ -342,7 +342,7 @@ ldx alienarrayy,y
 adc character1xpos
 sta arraypoints
  
-jsr character1lp
+jsr character4lp
 inc columncount
 lda columncount
 cmp column4
@@ -400,7 +400,7 @@ lda #22
 adc character1xpos
 sta arraypoints
  
-jsr character1lp
+jsr character5lp
 inc columncount
 lda columncount
 cmp column5
@@ -475,7 +475,7 @@ sta (zeropagel),y
  
 
 iny
-lda #84
+lda #83
 sta (zeropagel),y
 ldy arraypoints
 lda coloraddressl,x
@@ -499,6 +499,169 @@ sta (zeropagel),y
  
  
 rts
+character2lp
+
+
+
+
+
+ 
+
+ 
+;lda alienarrayy,x
+;tax
+
+  
+
+clc
+
+
+ldy arraypoints
+lda displayaddressl,x
+sta zeropagel
+
+lda displayaddressh,x
+sta zeropageh
+ 
+
+lda #84
+sta (zeropagel),y
+ 
+
+iny
+lda #85
+sta (zeropagel),y
+ldy arraypoints
+lda coloraddressl,x
+sta zeropagel
+
+lda coloraddressh,x
+sta zeropageh
+
+
+ 
+
+lda #7
+sta (zeropagel),y
+clc
+iny
+ 
+ 
+
+lda #7
+sta (zeropagel),y
+ 
+ 
+rts
+character3lp
+
+
+
+
+
+ 
+
+ 
+;lda alienarrayy,x
+;tax
+
+  
+
+clc
+
+
+ldy arraypoints
+lda displayaddressl,x
+sta zeropagel
+
+lda displayaddressh,x
+sta zeropageh
+ 
+
+lda #86
+sta (zeropagel),y
+ 
+
+iny
+lda #87
+sta (zeropagel),y
+ldy arraypoints
+lda coloraddressl,x
+sta zeropagel
+
+lda coloraddressh,x
+sta zeropageh
+
+
+ 
+
+lda #8
+sta (zeropagel),y
+clc
+iny
+ 
+ 
+
+lda #8
+sta (zeropagel),y
+ 
+ 
+rts
+character4lp
+
+
+
+
+
+ 
+
+ 
+;lda alienarrayy,x
+;tax
+
+  
+
+clc
+
+
+ldy arraypoints
+lda displayaddressl,x
+sta zeropagel
+
+lda displayaddressh,x
+sta zeropageh
+ 
+
+lda #88
+sta (zeropagel),y
+ 
+
+iny
+lda #89
+sta (zeropagel),y
+ldy arraypoints
+lda coloraddressl,x
+sta zeropagel
+
+lda coloraddressh,x
+sta zeropageh
+
+
+ 
+
+lda #4
+sta (zeropagel),y
+clc
+iny
+ 
+ 
+
+lda #4
+sta (zeropagel),y
+ 
+ 
+rts
+
 charater1trigger 
 
 ldx #0
@@ -516,7 +679,60 @@ sta character1trigger
 
 rts
 
+character5lp
+
+
+
+
+
  
+
+ 
+;lda alienarrayy,x
+;tax
+
+  
+
+clc
+
+
+ldy arraypoints
+lda displayaddressl,x
+sta zeropagel
+
+lda displayaddressh,x
+sta zeropageh
+ 
+
+lda #90
+sta (zeropagel),y
+ 
+
+iny
+lda #91
+sta (zeropagel),y
+ldy arraypoints
+lda coloraddressl,x
+sta zeropagel
+
+lda coloraddressh,x
+sta zeropageh
+
+
+ 
+
+lda #3
+sta (zeropagel),y
+clc
+iny
+ 
+ 
+
+lda #3
+sta (zeropagel),y
+ 
+ 
+rts 
 
 character1backward
 clc
@@ -865,9 +1081,16 @@ bne erasurecolorl
 
 
 rts
+columns
+  jsr column1rout
+   jsr column2rout
+  jsr column3rout
+   jsr column4rout
+  jsr column5rout
+ 
 
 
-
+rts
 
 
   
