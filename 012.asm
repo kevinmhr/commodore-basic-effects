@@ -127,17 +127,19 @@ inx
 cpx #24
 bne erasurel
 rts
- 
+
  
 column1rout
 ldx #0
 lda #0
+ 
+
 sta columncount
 checky2
-
+ 
+jsr resetcharacters
 
 clc
-
 
 
 
@@ -145,8 +147,7 @@ ldy columncount
 ldx alienarrayy,y
  
  
-
-
+ 
 
 lda #2
 adc character1xpos
@@ -200,7 +201,7 @@ sta shoottrigger
 
 dec column1
 jsr pickupsnd
-
+ 
 rts
 
 column2rout
@@ -210,7 +211,7 @@ lda #0
 sta columncount
 
 checky3
-
+ jsr resetcharacters
 clc
 ldy columncount
 
@@ -262,7 +263,7 @@ lda #1
 sta shoottrigger
 dec column2
 jsr pickupsnd
-
+ 
 rts
 
 
@@ -275,7 +276,7 @@ ldx #0
 lda #0
 sta columncount
 checky4
-
+ jsr resetcharacters
 clc
 ldy columncount
 
@@ -323,7 +324,7 @@ lda #1
 sta shoottrigger
 dec column3
 jsr pickupsnd
-
+ 
 rts
 
 
@@ -331,9 +332,9 @@ column4rout
 ldx #0
 lda #0
 sta columncount
-
+ 
 checky5
-
+jsr resetcharacters
 clc
 ldy columncount
 
@@ -383,6 +384,8 @@ dec column4
 lda #1
 sta shoottrigger
 jsr pickupsnd
+ 
+
 rts
 
 column5rout
@@ -391,6 +394,8 @@ ldx #0
 lda #0
 sta columncount
 checky6
+ jsr resetcharacters
+
 ldy columncount
 
 ldx alienarrayy,y
@@ -442,7 +447,7 @@ lda #1
 sta shoottrigger
 dec column5
 jsr pickupsnd
-
+ 
 rts
 
 character1lp
@@ -471,11 +476,14 @@ sta zeropageh
  
 
 lda #82
+lda charactersno
 sta (zeropagel),y
  
 
 iny
 lda #83
+lda charactersno
+adc #1
 sta (zeropagel),y
 ldy arraypoints
 lda coloraddressl,x
@@ -487,14 +495,14 @@ sta zeropageh
 
  
 
-lda #6
+lda characterscol
 sta (zeropagel),y
 clc
 iny
  
  
 
-lda #6
+ 
 sta (zeropagel),y
  
  
@@ -525,11 +533,15 @@ sta zeropageh
  
 
 lda #84
+lda charactersno
+adc #2
 sta (zeropagel),y
  
 
 iny
 lda #85
+lda charactersno
+adc #3
 sta (zeropagel),y
 ldy arraypoints
 lda coloraddressl,x
@@ -541,20 +553,20 @@ sta zeropageh
 
  
 
-lda #7
+lda characterscol
+adc #1
 sta (zeropagel),y
 clc
 iny
  
  
 
-lda #7
+ 
 sta (zeropagel),y
  
  
 rts
 character3lp
-
 
 
 
@@ -579,11 +591,17 @@ sta zeropageh
  
 
 lda #86
+lda charactersno
+adc #4
+
 sta (zeropagel),y
  
 
 iny
 lda #87
+lda charactersno
+adc #5
+
 sta (zeropagel),y
 ldy arraypoints
 lda coloraddressl,x
@@ -595,14 +613,15 @@ sta zeropageh
 
  
 
-lda #8
+lda characterscol
+adc #3
 sta (zeropagel),y
 clc
 iny
  
  
 
-lda #8
+ 
 sta (zeropagel),y
  
  
@@ -633,11 +652,16 @@ sta zeropageh
  
 
 lda #88
+lda charactersno
+adc #6
 sta (zeropagel),y
  
 
 iny
 lda #89
+lda charactersno
+adc #7
+
 sta (zeropagel),y
 ldy arraypoints
 lda coloraddressl,x
@@ -649,14 +673,15 @@ sta zeropageh
 
  
 
-lda #4
+lda characterscol
+adc #4
 sta (zeropagel),y
 clc
 iny
  
  
 
-lda #4
+ 
 sta (zeropagel),y
  
  
@@ -705,11 +730,16 @@ sta zeropageh
  
 
 lda #90
+lda charactersno
+adc #8
+
 sta (zeropagel),y
  
 
 iny
 lda #91
+lda charactersno
+adc #9
 sta (zeropagel),y
 ldy arraypoints
 lda coloraddressl,x
@@ -721,14 +751,15 @@ sta zeropageh
 
  
 
-lda #3
+lda characterscol
+adc #5
 sta (zeropagel),y
 clc
 iny
  
  
 
-lda #3
+ 
 sta (zeropagel),y
  
  
@@ -1087,11 +1118,25 @@ columns
   jsr column3rout
    jsr column4rout
   jsr column5rout
- 
-
-
 rts
 
+resetcharacters
+ 
+ lda charactersno
+cmp #86
+beq resetcharactersno
+
+  inc charactersno
+inc charactersno
+inc characterscol
+
+rts
+resetcharactersno
+lda #1
+sta characterscol
+lda #82
+sta charactersno
+rts
 
   
  

@@ -65,7 +65,8 @@ column3 =$58
 column4 =$59
 column5 =$60
 columncount = $61
-rowcount =$62
+charactersno =$64
+characterscol =$65
 *=$0801
         !byte    $1E, $08, $0A, $00, $9E, $20, $28,$32, $30, $38, $30, $29, $3a, $8f, $20, $28, $43, $29, $20, $32, $30, $32, $31, $20, $4D, $54, $53, $56, $00, $00, $00
  
@@ -88,7 +89,8 @@ sta shoottrigger
  lda #%00000111
  sta $d015
 
-
+lda #1
+sta characterscol
 
 lda $01    
 and #251    
@@ -181,6 +183,8 @@ sta worldh
 lda #3
 lda #10
 sta world
+lda #82
+sta charactersno
 
 lda #0
 sta $d020
@@ -241,6 +245,7 @@ cli
 
 mainloop        
  
+
 
 aftermove
  jsr erasure
@@ -1112,7 +1117,7 @@ carchar2
 !byte %10011111 
 !byte %11101111
 !byte %01010101
-!byte %00000010
+!byte %00001000
 
 carchar3
 !byte %00000111
@@ -1136,21 +1141,21 @@ carchar4
    
    
 carchar5
-!byte %00000111
+!byte %00000000
 !byte %00000111
 !byte %00001111
 !byte %01111101
-!byte %10011111
+!byte %11111111
 !byte %01111111
 !byte %00001111
 !byte %00000111
 
 carchar6
-!byte %11100000
+!byte %00000000
 !byte %11100000
 !byte %11110000
 !byte %01111110
-!byte %11111001
+!byte %11111111
 !byte %11111110
 !byte %11110000
 !byte %11100000
@@ -1194,6 +1199,48 @@ carchar10
 !byte %00001000
 !byte %00010000
 !byte %11100000
+
+carchar11
+!byte %00000000
+!byte %00000111
+!byte %00001000
+!byte %00010110
+!byte %00010011
+!byte %00010000
+!byte %00001000
+!byte %00000111
+
+carchar12
+!byte %00000000
+!byte %11100000
+!byte %00010000
+!byte %01101000
+!byte %11001000
+!byte %00001000
+!byte %00010000
+!byte %11100000
+
+carchar13
+!byte %00100000
+!byte %00001111
+!byte %01111100
+!byte %11111001
+!byte %11111001
+!byte %01110100
+!byte %00111111 
+!byte %00000111
+
+carchar14
+!byte %00000100
+!byte %11110000
+!byte %00111110
+!byte %10011111 
+!byte %10011111 
+!byte %00101110
+!byte %11111100
+!byte %11100000
+
+
    
 *=$3000
 
