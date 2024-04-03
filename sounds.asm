@@ -154,7 +154,7 @@ lazbeep3
 expnoz
          jsr soundend3
          
-         lda #%00000100 ; 1 9
+         lda #%00011100 ; 1 9
          sta attdec
          lda #%00000011 ; 0 0
          sta susrel

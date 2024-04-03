@@ -697,6 +697,7 @@ sta character1trigger
 ;inx
 ;cpx #6
 ;bne character1triggerlp
+
 rts
 charater1triggerback 
 lda #1
@@ -1122,6 +1123,7 @@ rts
 
 resetcharacters
  
+
  lda charactersno
 cmp #86
 beq resetcharactersno
@@ -1132,10 +1134,13 @@ inc characterscol
 
 rts
 resetcharactersno
+jsr backfire
 lda #1
 sta characterscol
 lda #82
 sta charactersno
+
+ 
 rts
 
   

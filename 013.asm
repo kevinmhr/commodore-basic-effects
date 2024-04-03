@@ -43,16 +43,13 @@ sprites
  sta $7f8 
 lda #192
 sta $7f9
-   lda #148
+   lda #192
   sta $7fa
- ;sta $7fb
- ;sta $7fc
- ; sta $7fd
-   ;sta $7fe
+ ; sta $7fb
+; sta $7fc
+ ;  sta $7fd
+ ;  sta $7fe
    
-    lda #148
- sta $7fd
- sta $7fe
  
 
 
@@ -186,8 +183,67 @@ lda $d000
 lda $d001
  sta $d003
 jsr bypassshoot
+
+backfireprocess
+lda backfiretrigger
+cmp #1
+beq backfireshootstandby
+lda $d005
+lsr
+lsr
+lsr
+cmp #26
+beq backfireshootoff
+inc $d005
+inc $d005 
+inc $d005
+inc $d005 
+
+ 
+bypassbackfire
+rts
+
+
+
+
+
+backfireshootoff
+
+lda #1
+sta backfiretrigger
+jsr bypassbackfire
+rts
+
 rts  
  
+backfireshootstandby
+ 
+lda #1
+
+ 
+sta $d005
+jsr xscale
+ 
+rts
+xscale
+iny
+lda alienarrayx,y
+adc character1xpostemp
+ror
+ror
+ror
+ 
+ 
+adc #125
+sta $d004
+ 
+rts
+backfire
+
+lda #0
+sta backfiretrigger
+
+rts
 
 
  
@@ -253,7 +309,7 @@ sec
  
  
 lda $d000,x
-sbc #1
+sbc #3
 sta $d000,x
  bcc extendedleft
  
@@ -415,7 +471,7 @@ right
  ldx #0
 
 lda $d000,x
-adc #1
+adc #3
 sta $d000,x
  bcs extendedright
  ldx #0
@@ -516,6 +572,8 @@ rts
 
 
 collisionmain
+
+
 lda #2
 adc character1xpostemp
 sta arraypoints
@@ -561,8 +619,6 @@ jsr resetcolumns
 
 bypassshoot
 rts
-
-
 
 
 
