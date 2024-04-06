@@ -139,23 +139,11 @@ lda shoottrigger
 cmp #1
 beq shootstandby
 lda $d003
+lsr
+lsr
+lsr
 cmp #1
-beq shootoff 
-lda $d003
-cmp #0
-beq shootoff 
-lda $d003
-cmp #2
-beq shootoff 
-lda $d003
-cmp #3
-beq shootoff 
-lda $d003
-cmp #4
-beq shootoff 
-lda $d003
-cmp #255
-beq shootoff 
+ beq shootoff 
 dec $d003
 dec $d003
 dec $d003
@@ -307,10 +295,12 @@ sec
  
  ldx #0
  
- 
-lda $d000,x
+ lda $d000 
+ cmp #60
+ beq extendedleft
+lda $d000 
 sbc #3
-sta $d000,x
+sta $d000 
  bcc extendedleft
  
 
@@ -321,7 +311,7 @@ sta xoffset
 
 ldx #0
  
- lda $d000,x
+ lda $d000 
 cmp #5
 ;beq stopcarl
 
@@ -433,13 +423,17 @@ jsr down
 jsr right
 rts
 extendedleft
-lda $d010
-cmp #%00000011
-beq extendleft
+lda #60
+sta $d000
 
-lda #%00000001
-sta $d010
-jsr left
+
+;lda $d010
+;cmp #%00000011
+;beq extendleft
+
+;lda #%00000001
+;sta $d010
+;jsr left
 rts
 
 dechib
@@ -514,9 +508,13 @@ rts
 
 
 extendedright
-lda #%00000011
-sta $d010
-jsr right
+lda #254
+sta $d000
+
+
+;lda #%00000011
+;sta $d010
+; jsr right
 rts
 
 extendleft
@@ -615,9 +613,11 @@ adc character1xpostemp
 sta arraypoints
 jsr collided5
 
-jsr resetcolumns
+
 
 bypassshoot
+jsr resetcolumns
+
 rts
 
 

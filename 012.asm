@@ -95,14 +95,20 @@ ldx #0
 
 erasurel
  
+ lda coloraddressl,x
 
-;lda bufferaddressl,x
+ sta zeropagel3
 
-;sta zeropagel2
-
-;lda bufferaddressh,x
+ lda coloraddressh,x
  
-;sta zeropageh2 
+ sta zeropageh3
+ lda buffer2addressl,x
+
+ sta zeropagel2
+
+ lda buffer2addressh,x
+ 
+ sta zeropageh2 
 ;lda zeropagel2
 ;adc #100 
 ;sta zeropagel2
@@ -117,15 +123,20 @@ ldy #0
 
 erasurel2
 lda (zeropagel2),y
-lda #32
+;lda #32
 sta (zeropagel),y
- 
+  lda #2
+sta (zeropagel3),y
   iny
  cpy #39
  bne erasurel2
 inx
 cpx #24
 bne erasurel
+
+
+
+
 rts
 
  
