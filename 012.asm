@@ -201,7 +201,7 @@ cmp arraypoints
 beq collided111
 rts
 collided111
-
+jsr collisionburst
 
 lda $d000
  sta $d002
@@ -265,6 +265,7 @@ cmp arraypoints
 beq collided122
 rts
 collided122
+jsr collisionburst
 lda $d000
  sta $d002
 lda $d001
@@ -326,7 +327,7 @@ cmp arraypoints
 beq collided133
 rts
 collided133
-
+jsr collisionburst
 lda $d000
  sta $d002
 lda $d001
@@ -386,6 +387,7 @@ cmp arraypoints
 beq collided144
 rts
 collided144
+jsr collisionburst
 lda $d000
  sta $d002
 lda $d001
@@ -448,8 +450,10 @@ lsr
  
 cmp arraypoints
 beq collided155
+
 rts
 collided155
+jsr collisionburst
 lda $d000
  sta $d002
 lda $d001

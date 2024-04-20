@@ -37,20 +37,24 @@ rts
 
 
 sprites
+
+ 
  
    lda spriteindex2
  ;lda #193
  sta $7f8 
 lda #192
 sta $7f9
-   lda #192
+   lda #195
   sta $7fa
- ; sta $7fb
-; sta $7fc
+  
+  lda #198
+ sta $7fb
+ ;sta $7fc
  ;  sta $7fd
  ;  sta $7fe
    
- 
+  inc $d028
 
 
 lda spriteindex3
@@ -296,12 +300,12 @@ sec
  ldx #0
  
  lda $d000 
- cmp #60
+ cmp #66
  beq extendedleft
 lda $d000 
 sbc #3
 sta $d000 
- bcc extendedleft
+; bcc extendedleft
  
 
  
@@ -423,7 +427,7 @@ jsr down
 jsr right
 rts
 extendedleft
-lda #60
+lda #68
 sta $d000
 
 
@@ -571,7 +575,10 @@ rts
 
 collisionmain
 
-
+lda #1
+adc character1xpostemp
+sta arraypoints
+jsr collided1
 lda #2
 adc character1xpostemp
 sta arraypoints
@@ -623,8 +630,20 @@ rts
 
 
 
+collisionburst
+ldx #0
+col111l
+  lda #%00011111
+ sta $d015
 
+lda $d003
+adc #20
+sta $d007
+lda $d002
+adc #2
+sta $d006
  
-
+ 
+rts
 
 
