@@ -70,7 +70,11 @@ columncount = $61
 charactersno =$64
 characterscol =$65
 backfiretrigger = $67
- 
+time1= $86
+time2= $85
+time3= $84
+time4= $82
+time5= $83
 *=$0801
         !byte    $1E, $08, $0A, $00, $9E, $20, $28,$32, $30, $38, $30, $29, $3a, $8f, $20, $28, $43, $29, $20, $32, $30, $32, $31, $20, $4D, $54, $53, $56, $00, $00, $00
  
@@ -164,6 +168,11 @@ sta spritecount
 lda #0
 sta spriteindex
 sta spriteindex3
+sta time1
+sta time2
+sta time3
+sta time4
+sta time5
 lda #193
 sta spriteindex2
          lda #20
@@ -253,6 +262,8 @@ cli
 
 mainloop        
 
+ jsr timerdisplay
+ 
 inc increment
 
 aftermove
@@ -286,8 +297,9 @@ lda xoffset
 cmp #59
  beq resetxoffsetinc
 
+
  
-  
+
  
   
  ; jsr right

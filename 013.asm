@@ -645,5 +645,89 @@ sta $d006
  
  
 rts
+timerdisplay
 
+clc
+
+
+tim
+ldx #22
+lda buffer2addressl,x
+sta zeropagel
+lda buffer2addressh,x
+sta zeropageh
+clc
+ 
+ldy #7
+ 
+lda #58
+sta (zeropagel),y
+ldy #8
+
+lda time5
+adc #48
+sta (zeropagel),y
+
+ldy #5
+lda time4
+
+adc #48
+sta (zeropagel),y
+ldy #6
+lda time3
+
+adc #48
+sta (zeropagel),y
+lda time5
+cmp #$9
+beq zerotime5
+inc time5
+lda time1
+
+cmp #3
+beq inctime2
+inc time1
+rts
+
+inctime2
+clc
+ 
+lda time2
+
+cmp #3
+
+beq inctime3
+inc time2
+ 
+rts
+inctime3
+lda #0
+sta time2
+ 
+lda time3
+cmp #$9
+beq zerotime3
+inc time3
+ 
+rts
+zerotime3
+lda #0
+sta time3
+ 
+lda time4
+cmp #$9
+beq zerotime4
+
+
+inc time4
+rts
+zerotime4
+lda #0
+sta time4
+rts
+
+zerotime5
+lda #0
+sta time5
+rts
 
