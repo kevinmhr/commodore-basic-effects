@@ -148,7 +148,7 @@ lda #0
 sta columncount
 checky2
  
-jsr resetcharacters
+ 
 
 clc
 
@@ -222,7 +222,7 @@ lda #0
 sta columncount
 
 checky3
- jsr resetcharacters
+
 clc
 ldy columncount
 
@@ -288,7 +288,7 @@ ldx #0
 lda #0
 sta columncount
 checky4
- jsr resetcharacters
+ 
 clc
 ldy columncount
 
@@ -346,7 +346,7 @@ lda #0
 sta columncount
  
 checky5
-jsr resetcharacters
+ 
 clc
 ldy columncount
 
@@ -407,7 +407,7 @@ ldx #0
 lda #0
 sta columncount
 checky6
- jsr resetcharacters
+ 
 
 ldy columncount
 
@@ -450,7 +450,7 @@ lsr
  
 cmp arraypoints
 beq collided155
-
+ 
 rts
 collided155
 jsr collisionburst
@@ -793,11 +793,9 @@ dec character1xpos
  lda character1xpos
  sta character1xpostemp
 lda character1xpostemp
-adc #2
+adc #1
 sta character1xpostemp
-inx
-cpx #1
-bne character1backward1 
+ 
  
 rts
 
@@ -815,10 +813,8 @@ beq charater1triggerback
 inc character1xpos
   lda character1xpos
  sta character1xpostemp
-inx
-cpx #1
-bne character1forward1
  
+
  
 rts
 drawxline
@@ -1149,12 +1145,12 @@ inc characterscol
 
 rts
 resetcharactersno
-jsr backfire
+
 lda #1
 sta characterscol
 lda #82
 sta charactersno
-
+  jsr backfire
  
 rts
 

@@ -261,22 +261,40 @@ main
 cli
 
 mainloop        
-
- jsr timerdisplay
- 
-inc increment
-
-aftermove
- jsr erasure
-jsr columns
- 
-
  jsr character1forward
 
+ 
+ jsr resetcharacters
+
+
+ jsr erasure
+
+aftermove
+    
+ jsr timerdisplay
+
 
  
+   lda #0
+sta increment
+columnsloop
+  inc $d028
+
+  jsr shootlogic
    
-  jsr sprites
+   
+   jsr movejoy
+ jsr backfireprocess
+
+ jsr columns
+ 
+ 
+
+inc increment
+
+lda increment 
+cmp #18
+bne columnsloop
  ;jsr drawpickups
  
 
@@ -286,8 +304,7 @@ irq
   lda #%00000111
  sta $d015
 inc $d030
-jsr backfireprocess
- jsr shootlogic
+
 
  ldx #0   
 lda xoffset
@@ -297,6 +314,7 @@ lda xoffset
 cmp #59
  beq resetxoffsetinc
 
+   jsr sprites
 
  
 
@@ -305,12 +323,12 @@ cmp #59
  ; jsr right
  ; jsr display
 
-    jsr movejoy
-    
-    
- 
- 
   
+    
+
+ 
+
+
 
 
 
@@ -323,9 +341,9 @@ cmp #59
  
  
 afterlines
-lda #5
-sta  $d019
-  
+ 
+ 
+  lsr  $d019
           lda $dc0d
          sta $dd0d
        ;lda #$ff
@@ -1221,7 +1239,7 @@ spritedata !byte  %00000000,%00000000,%00000000
            !byte  %00000000,%11111111,%00000000
            !byte  %00000000,%11011011,%00000000
            !byte  %00000000,%11100111,%00000000
-           !byte  %00000000,%11011011,%00000000
+         !byte  %00000000,%11011011,%00000000
            !byte  %00000000,%10000001,%00000000
            !byte  %00000000,%11000011,%00000000
             !byte  %00000000 

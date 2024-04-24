@@ -54,19 +54,18 @@ sta $7f9
  ;  sta $7fd
  ;  sta $7fe
    
-  inc $d028
 
 
-lda spriteindex3
- cmp #148
- beq resetspriteindex3
+;lda spriteindex3
+; cmp #148
+; beq resetspriteindex3
  
-lda spriteindex4
- cmp #64
- beq resetspriteindex4
-  lda spriteindex4
-  adc #4
-  sta spriteindex4
+;lda spriteindex4
+; cmp #64
+; beq resetspriteindex4
+ ; lda spriteindex4
+ ; adc #4
+;  sta spriteindex4
    
 
 
@@ -74,26 +73,26 @@ lda spriteindex4
  
 
 ldy #0
-spritesloop
-   lda spriteindex2
-  cmp #141
-  beq resetspriteindex2
-  lda spriteindex2
-  cmp #142
-  beq resetspriteindex2
-    lda spriteindex2
-  cmp #143
-  beq resetspriteindex2
-inc spritecount
- 
- ldx spritecount
- cpx #255
- beq resetspritecount
 
-  
+  ; lda spriteindex2
+;  cmp #141
+;  beq resetspriteindex2
+;  lda spriteindex2
+ ; cmp #142
+;  beq resetspriteindex2
+  ;  lda spriteindex2
+ ; cmp #143
+ ; beq resetspriteindex2
+;inc spritecount
+ 
+ ;ldx spritecount
+; cpx #255
+ ;beq resetspritecount
+
+spritesloop 
  
  
-bne spritesloop
+;bne spritesloop
  
  
  
@@ -137,7 +136,7 @@ shootlogic
 
 
  
-
+jsr collisionmain
 
 lda shoottrigger
 cmp #1
@@ -149,14 +148,10 @@ lsr
 cmp #1
  beq shootoff 
 dec $d003
-dec $d003
-dec $d003
-dec $d003
-dec $d003
-dec $d003
-dec $d003
+ dec $d003
  
-jsr collisionmain
+ 
+
 
 rts
 
@@ -187,9 +182,8 @@ lsr
 cmp #26
 beq backfireshootoff
 inc $d005
-inc $d005 
-inc $d005
-inc $d005 
+ 
+ 
 
  
 bypassbackfire
@@ -268,7 +262,7 @@ sta chrpositionh
  
 
 lda $d001,x
-adc #3
+adc #2
 sta $d001,x
 
 rts
@@ -303,7 +297,7 @@ sec
  cmp #66
  beq extendedleft
 lda $d000 
-sbc #3
+sbc #1
 sta $d000 
 ; bcc extendedleft
  
@@ -469,7 +463,7 @@ right
  ldx #0
 
 lda $d000,x
-adc #3
+adc #1
 sta $d000,x
  bcs extendedright
  ldx #0
@@ -632,6 +626,7 @@ rts
 
 collisionburst
 ldx #0
+stx increment2
 col111l
   lda #%00011111
  sta $d015
@@ -642,8 +637,9 @@ sta $d007
 lda $d002
 adc #2
 sta $d006
- 
- 
+inc increment2
+ lda increment2
+ bne col111l
 rts
 timerdisplay
 
@@ -708,7 +704,7 @@ lda time3
 cmp #$9
 beq zerotime3
 inc time3
- 
+
 rts
 zerotime3
 lda #0
