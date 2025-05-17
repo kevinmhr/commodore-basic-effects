@@ -40,10 +40,10 @@ zeroy
 
 ldy #0
 
-jsr soundend1
+ jsr soundend1
 
 
- 
+  
 jsr soundend2
 incinc2
 
@@ -53,13 +53,8 @@ incinc2
  
  
  
-lda lofreq
- 
-and #%00001111
-sta lofreq
 
-jsr soundgo2
-jsr soundend2
+ 
  
  
 
@@ -68,7 +63,7 @@ sta susrel
 lda #1
 sta attdec
 
-jsr soundgo2
+ 
 
 ;sbc #150
  
@@ -85,15 +80,20 @@ sta inc2
 inc biting
 iny
 resetpitch
+lda #200
+ sta susrel
+ lda lofreq
+and #%00011111
+sta lofreq
+jsr soundgo2 
 
- 
 resety 
  
 
 lda #200
  sta susrel
-jsr soundgo1
-
+ jsr soundgo1
+ 
 
 
 inc inc2
@@ -178,6 +178,7 @@ sta lofreq
  
  
 lda pitching2
+bcs resetpitch
 ;lda #10
  
 
