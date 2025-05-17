@@ -15,20 +15,37 @@ pitching3 =$77
 biting =$75
 incr =$72
 inc2 =$78
+wavebit =$79
 
 *=$0801
         !byte    $1E, $08, $0A, $00, $9E, $20, $28,$32, $30, $38, $30, $29, $3a, $8f, $20, $28, $43, $29, $20, $32, $30, $32, $31, $20, $4D, $54, $53, $56, $00, $00, $00
  
 *=$820
- 
+lda #0
+sta $d020
+sta $d021
+ldx#0
+clearscreen
+inx
+lda #32
+sta $0400,x
+sta $0500,x
+sta $0600,x
+sta $0700,x
+
+cpx #255
+bne clearscreen
+ldx #0
 zeroy
 
 ldy #0
- 
+
 jsr soundend1
+
+
+ 
 jsr soundend2
 incinc2
-
 
 
 
@@ -42,11 +59,20 @@ and #%00001111
 sta lofreq
 
 jsr soundgo2
+jsr soundend2
+ 
+ 
 
+lda #1
+sta susrel
+lda #1
+sta attdec
+
+jsr soundgo2
 
 ;sbc #150
  
- 
+
 lda #1
 sta susrel
 lda #1
@@ -60,8 +86,9 @@ inc biting
 iny
 resetpitch
 
+ 
 resety 
-
+ 
 
 lda #200
  sta susrel
@@ -78,11 +105,13 @@ sta incr
 
 
   inc pitching
-
+ 
+ 
 
 
 timeloop2
- 
+  lda #16
+sta wavefm
 inc pitching3
   
 
@@ -109,12 +138,10 @@ lda attdecinc
 cmp #50
 beq timeloop2
 
-lda #16
-sta wavefm
+
 
  
- 
- 
+
 
 lda #255
 
@@ -125,27 +152,29 @@ cpy #30
 beq zeroy 
 
  lda bits,y
-and #%00001111
  
-  
+ 
+ 
+
 eor pitching
 
-;ora pitching2
+ 
 ora bits,y
  eor pitching3
  bit biting
+
  
-  
+ eor wavebit
  
  and #%00011111
- 
+
 sta lofreq
+ inc wavebit
+  
+ sta $060a,y
+  sta $da0a,y
  
  
-;lda lofreq
-;adc #200
-;bcs resetpitch
-;sta hifreq
  
  
 lda pitching2
@@ -154,7 +183,6 @@ lda pitching2
 
  
 
-
  
 
 
@@ -166,7 +194,7 @@ lda pitching2
 
 
 
- 
+  
 
 
 
