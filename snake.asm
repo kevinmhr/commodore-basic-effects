@@ -16,20 +16,21 @@ biting =$75
 incr =$72
 inc2 =$78
 wavebit =$79
-charposition= $81
+charposition=$81
 charsymb=$82
 charhsymb=$92
-headposition=$95
+ 
 charpage =$83
 pickupl=$5201
 pickuph=$5200
 pickupltemp =$89
 pickupchar=$86
 lenght = $88
+lenght2= $95
 direction= $87
 charpositionbuf= $5000
 charpagebuf= $5100
-wallchar=$5101
+wallchar=$94
 wallcolor=$102
  charcolor=$103
 soundstart=$90
@@ -39,10 +40,11 @@ pickupcolor=$93
  
 *=$820
 init
+init2
 lda #251
 sta pickupchar
  
- lda #241
+lda #241
 sta wallchar
 lda #8
 sta wallcolor
@@ -56,20 +58,26 @@ lda #0
 sta soundstart
 lda #2
 sta pickuph
+ 
 lda #8
 sta lenght
  
 lda #5
 
 sta charpage
+;lda #5
+
+;sta charpagebuf
 lda #253
 sta charsymb
 lda #230
 sta charcolor
 lda #50
 sta charposition
-lda #0
 
+;lda #50
+;sta charpositionbuf
+lda #0
 sta $d020
 sta $d021
 ldx#0
@@ -77,21 +85,18 @@ clearscreen
 inx
 lda #32
 sta $0400,x
-lda #4
-sta $d800,y
-lda #32
+ 
+ 
 sta $0500,x
-lda #4
-sta $d900,y
-lda #32
+ 
+ 
 sta $0600,x
-lda #4
-sta $da00,y
-lda #32
+ 
+ 
 sta $0700,x
-lda #4
-sta $db00,y
-cpx #255
+ 
+ 
+cpx #0
 bne clearscreen
  
  
@@ -107,7 +112,9 @@ incinc2
 
  
 resety 
-
+ lda lenght
+cmp #250
+beq clearagain
  
  
  jsr soundend1
@@ -121,10 +128,10 @@ jsr movejoy
 
 jsr pickup
 
-jsr drawframe
+
 
 inc pitching3
-
+jsr drawframe
 
 timeloop2
 
@@ -162,6 +169,10 @@ beq timeloop2
 
 jmp main
 rts
+clearagain
+jsr init2
+rts
+
 drawframe
 ldx #0
 
@@ -212,9 +223,10 @@ adc #40
 tax
 cpx #240
 bne drawbkgy
-ldx #0
-rts
  
+rts
+
+
 soundplay
 
 
@@ -387,25 +399,25 @@ jsr addtoscreen
 rts
 
 
-page4p
+page4n
 ldy charpositionbuf,x
  
 lda #32
 sta $0400,y
 rts
-page5p
+page5n
 ldy charpositionbuf,x
  
 lda #32
 sta $0500,y
 rts
-page6p
+page6n
 ldy charpositionbuf,x
  
 lda #32
 sta $0600,y
 rts
-page7p
+page7n
 ldy charpositionbuf,x
  
 lda #32
@@ -415,7 +427,7 @@ rts
 addtoscreen
 jsr collision
 
- jsr putchar
+ jsr charclear
 
 
 lda charpage
@@ -425,6 +437,7 @@ sta charpositionbuf
 ldy lenght 
  
 addtoscl
+ 
 dey
 dey
 lda charpositionbuf,y
@@ -437,10 +450,11 @@ cpy #0
 bne addtoscl
 
 ldy lenght 
-
+ 
 addtosch
 dey
 dey
+ 
 lda charpagebuf,y
 iny
 iny
@@ -450,28 +464,15 @@ dey
 cpy #0
 bne addtosch
  
- jsr charclean
+ jsr putchar
 rts
-putchar
+charclear
 ldx lenght
+ 
 dex
 dex
 lda #32
 ldy charpagebuf,x 
-cpy #4
-beq page4p
-cpy #5
-beq page5p
-cpy #6
-beq page6p
-cpy #7
-beq page7p
-rts
-charclean
-
-ldx charposition
- 
-ldy charpage 
 cpy #4
 beq page4n
 cpy #5
@@ -480,30 +481,44 @@ cpy #6
 beq page6n
 cpy #7
 beq page7n
+rts
+putchar
+
+ldx charposition
+ 
+ldy charpage 
+cpy #4
+beq page4p
+cpy #5
+beq page5p
+cpy #6
+beq page6p
+cpy #7
+beq page7p
 lda #0
  
 rts
-page4n
+page4p
 lda charsymb
 sta $0400,x
 lda charcolor
  sta $d800,x
 rts
-page5n
+page5p
 lda charsymb
 sta $0500,x
 lda charcolor
 sta $d900,x
  
 rts
-page6n
+page6p
 lda charsymb
 sta $0600,x
 lda charcolor
 sta $da00,x
  
 rts
-page7n
+page7p
 lda charsymb
 sta $0700,x
 lda charcolor
@@ -601,7 +616,7 @@ cmp pickupchar
 beq increaselenght
 cmp wallchar
 beq gotoinit
-  cmp charsymb
+cmp charsymb
 beq gotoinit
 rts
 
@@ -646,6 +661,7 @@ gotoinit
 jsr init
 rts
 increaselenght
+
 inc lenght
 inc lenght
  
@@ -673,7 +689,7 @@ lda #16
 sta wavefm
  lda #100
   sta susrel
- 
+
  jsr soundgo1 
 rts
 pickupcollisioncheck
@@ -781,7 +797,6 @@ sta $0700,x
 lda pickupcolor
 sta $db00,x
 rts
- 
  
  
  
