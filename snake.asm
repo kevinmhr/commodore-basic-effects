@@ -29,8 +29,11 @@ lenght = $88
 direction= $87
 charpositionbuf= $4000
 charpagebuf= $4100
+wallchar=$4101
+wallcolor=$102
+ charcolor=$103
 soundstart=$90
-
+pickupcolor=$93
 *=$0801
         !byte    $1E, $08, $0A, $00, $9E, $20, $28,$32, $30, $38, $30, $29, $3a, $8f, $20, $28, $43, $29, $20, $32, $30, $32, $31, $20, $4D, $54, $53, $56, $00, $00, $00
  
@@ -39,8 +42,12 @@ init
 lda #251
 sta pickupchar
  
- 
-
+ lda #241
+sta wallchar
+lda #8
+sta wallcolor
+lda #3
+sta pickupcolor
 lda #0
 sta pickupl
 lda #30
@@ -55,8 +62,10 @@ sta lenght
 lda #5
 
 sta charpage
-lda #250
+lda #253
 sta charsymb
+lda #230
+sta charcolor
 lda #50
 sta charposition
 lda #0
@@ -68,10 +77,20 @@ clearscreen
 inx
 lda #32
 sta $0400,x
+lda #4
+sta $d800,y
+lda #32
 sta $0500,x
+lda #4
+sta $d900,y
+lda #32
 sta $0600,x
+lda #4
+sta $da00,y
+lda #32
 sta $0700,x
-
+lda #4
+sta $db00,y
 cpx #255
 bne clearscreen
  
@@ -88,13 +107,11 @@ incinc2
 
  
 resety 
-lda #100
-sta lofreq
-lda soundstart
-cmp #1
-beq soundplay
+
+ 
+ 
  jsr soundend1
-afterplay
+
 
 
 lda #0
@@ -149,29 +166,46 @@ drawframe
 ldx #0
 
 drawbkgx
-lda #109
+lda wallchar
 sta $0400,x
 sta $07c0,x
+lda wallcolor
+sta $d800,x
+sta $dbc0,x
+
+
+
 inx
 cpx #40
 bne drawbkgx
 ldx #0
 drawbkgy
 clc
-lda #109
+lda wallchar
 sta $0400,x
 sta $04f0,x
  sta $05e0,x
  sta $06d0,x
+lda wallcolor
+sta $d800,x
+sta $d8f0,x
+ sta $d9e0,x
+ sta $dad0,x
+
+
 txa
 adc #39
 tay
-lda #109
+lda wallchar
 sta $0400,y
 sta $04f0,y
  sta $05e0,y
  sta $06d0,y
- 
+ lda wallcolor
+sta $d800,y
+sta $d8f0,y
+ sta $d9e0,y
+ sta $dad0,y
 txa
 
 adc #40
@@ -183,20 +217,7 @@ rts
  
 soundplay
 
-lda #10
-sta attdec
-lda #24
-sta volume  
-lda #16
-sta wavefm
- lda #100
-  sta susrel
- lda #0
-sta soundstart
- jsr soundgo1
-  jsr afterplay
 
-rts
 movejoy 
                 
              
@@ -449,8 +470,7 @@ rts
 charclean
 
 ldx charposition
-lda #250
-sta charsymb
+ 
 ldy charpage 
 cpy #4
 beq page4n
@@ -466,21 +486,28 @@ rts
 page4n
 lda charsymb
 sta $0400,x
- 
+lda charcolor
+ sta $d800,x
 rts
 page5n
 lda charsymb
 sta $0500,x
+lda charcolor
+sta $d900,x
  
 rts
 page6n
 lda charsymb
 sta $0600,x
+lda charcolor
+sta $da00,x
  
 rts
 page7n
 lda charsymb
 sta $0700,x
+lda charcolor
+sta $db00,x
  
 rts
 
@@ -572,7 +599,7 @@ ldx charposition
 lda $0400,x
 cmp pickupchar
 beq increaselenght
-cmp #109
+cmp wallchar
 beq gotoinit
   cmp charsymb
 beq gotoinit
@@ -586,7 +613,7 @@ ldx charposition
 lda $0500,x
 cmp pickupchar
 beq increaselenght
-cmp #109
+cmp wallchar
 beq gotoinit
  cmp charsymb
 beq gotoinit
@@ -597,7 +624,7 @@ ldx charposition
 lda $0600,x
 cmp pickupchar
 beq increaselenght
-cmp #109
+cmp wallchar
 beq gotoinit
   cmp charsymb
 beq gotoinit
@@ -609,7 +636,7 @@ ldx charposition
 lda $0700,x
 cmp pickupchar
 beq increaselenght
-cmp #109
+cmp wallchar
 beq gotoinit
   cmp charsymb
 beq gotoinit
@@ -621,8 +648,7 @@ rts
 increaselenght
 inc lenght
 inc lenght
- lda #1
- sta soundstart
+ 
 
 regenpickup
  
@@ -635,16 +661,29 @@ and #%01111110
 sta pickupl
 
 jsr pickupcollisioncheck
+inc pickupchar
+
+lda #100
+sta lofreq
+ lda #10
+sta attdec
+lda #24
+sta volume  
+lda #16
+sta wavefm
+ lda #100
+  sta susrel
  
+ jsr soundgo1 
 rts
 pickupcollisioncheck
 lda pickupl
 cmp #255
-beq regenpickup 
+;beq regenpickup 
 lda pickupl
 cmp #0
  
-beq regenpickup
+;beq regenpickup
 lda pickuph
 cmp #1
 beq pickupwallcolli4
@@ -659,28 +698,28 @@ rts
 pickupwallcolli4
 ldx pickupl
 lda $0400,x
-cmp #109
+cmp wallchar
 beq regenpickup
  
 rts
 pickupwallcolli5
 ldx pickupl
 lda $0500,x
-cmp #109
+cmp wallchar
 beq regenpickup
  
 rts
 pickupwallcolli6
 ldx pickupl
 lda $0600,x
-cmp #109
+cmp wallchar
 beq regenpickup
  
 rts
 pickupwallcolli7
 ldx pickupl
 lda $0700,x
-cmp #109
+cmp wallchar
 beq regenpickup
 
 rts
@@ -721,18 +760,26 @@ rts
 pickuppg4
 lda pickupchar
 sta $0400,x
+lda pickupcolor
+sta $d800,x
 rts
 pickuppg5
 lda pickupchar
 sta $0500,x
+lda pickupcolor
+sta $d900,x
 rts
 pickuppg6
 lda pickupchar
 sta $0600,x
+lda pickupcolor
+sta $da00,x
 rts
 pickuppg7
 lda pickupchar
 sta $0700,x
+lda pickupcolor
+sta $db00,x
 rts
  
  
