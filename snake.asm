@@ -18,9 +18,12 @@ inc2 =$78
 wavebit =$79
 charposition= $81
 charsymb=$82
+charhsymb=$92
+headposition=$95
 charpage =$83
-pickupl=$84
-pickuph=$85
+pickupl=$4201
+pickuph=$4200
+pickupltemp =$89
 pickupchar=$86
 lenght = $88
 direction= $87
@@ -35,21 +38,16 @@ soundstart=$90
 init
 lda #251
 sta pickupchar
-ldx #0
-ldy #40
-bitsfilling
-inx
-iny
-txa
-sta bits,x
-cpx #255
-bne bitsfilling
-
+ 
+ 
 
 lda #0
 sta pickupl
+lda #30
+sta pickupltemp
+lda #0
 sta soundstart
-lda #5
+lda #2
 sta pickuph
 lda #8
 sta lenght
@@ -57,7 +55,7 @@ sta lenght
 lda #5
 
 sta charpage
-lda #12
+lda #250
 sta charsymb
 lda #50
 sta charposition
@@ -76,11 +74,8 @@ sta $0700,x
 
 cpx #255
 bne clearscreen
-
-
-
-
-
+ 
+ 
 
 
 
@@ -93,48 +88,70 @@ incinc2
 
  
 resety 
-  jsr soundend1
-lda #0
-sta incr 
-lda #0
-sta soundstart
-
-timeloop2
-lda #0
-sta attdecinc
-
- lda #100
-
+lda #100
 sta lofreq
- 
 lda soundstart
 cmp #1
 beq soundplay
-
-
+ jsr soundend1
 afterplay
 
+
+lda #0
+sta incr 
+
+jsr movejoy
+
+jsr pickup
+
+jsr drawframe
+
+inc pitching3
+
+
+timeloop2
+
+
+
+lda #0
+sta attdecinc
   inc incr
  lda incr
 
- cmp #5
+ cmp #50
+beq resety
+
+
 
  
 
- beq resety
-jsr collision
+ 
 
-jsr movejoy
-jsr pickup
+
 
 main
+
+
  
+
+ inc attdecinc
+lda attdecinc
+cmp #50
+beq timeloop2
+
+
+
+ inc biting
+
+jmp main
+rts
+drawframe
 ldx #0
 
 drawbkgx
 lda #109
 sta $0400,x
-sta $0798,x
+sta $07c0,x
 inx
 cpx #40
 bne drawbkgx
@@ -161,36 +178,25 @@ adc #40
 tax
 cpx #240
 bne drawbkgy
-
- ldx #0
-
- inc attdecinc
-lda attdecinc
-cmp #50
-beq timeloop2
+ldx #0
+rts
  
-
- 
-
-jmp main
 soundplay
 
-lda #1
+lda #10
 sta attdec
 lda #24
 sta volume  
 lda #16
 sta wavefm
- lda #200
+ lda #100
   sta susrel
- 
- jsr soundgo1
- 
-jmp afterplay
- 
-lda #0
+ lda #0
 sta soundstart
+ jsr soundgo1
+  jsr afterplay
 
+rts
 movejoy 
                 
              
@@ -224,34 +230,41 @@ movejoy
 				beq movedown
                         cmp #14   
 				beq moveup
-				     
-            lda direction
-cmp #1
-beq up
-cmp #2
-beq down
-cmp #3
-beq left
-cmp #4
-beq right
+aftermove
+				  lda direction
+                         cmp #1
+                            beq up
+                            cmp #2
+                      beq down
+                   cmp #3
+                    beq left
+                   cmp #4
+                   beq right   
+
 
         
 				rts
+
+
 moveup
 lda #1
 sta direction
+jsr aftermove
 rts
 movedown
 lda #2
 sta direction
+jsr aftermove
 rts
 moveleft
 lda #3
 sta direction
+jsr aftermove
 rts
 moveright
 lda #4
 sta direction
+jsr aftermove
 rts
 up
 
@@ -268,6 +281,7 @@ jsr addtoscreen
  
 
 rts
+
 decpage 
 lda charpage
 sbc #0
@@ -289,7 +303,7 @@ rts
 
 down
 
-
+ 
 clc
 lda charposition
 adc #40
@@ -325,6 +339,8 @@ rts
 
 
 left
+ 
+ 
 sec
 lda charposition
 sbc #1
@@ -338,6 +354,7 @@ jsr addtoscreen
 rts
 
 right 
+ 
 clc
 lda charposition
 adc #1
@@ -347,6 +364,8 @@ bcs incpage
 jsr addtoscreen
  
 rts
+
+
 page4p
 ldy charpositionbuf,x
  
@@ -373,6 +392,8 @@ sta $0700,y
 rts
 
 addtoscreen
+jsr collision
+
  jsr putchar
 
 
@@ -521,7 +542,7 @@ soundgo3
 
 soundend1
          lda #0 
- sta $d404     ; wf1
+         sta $d404     ; wf1
          rts
 
 soundend2
@@ -553,7 +574,13 @@ cmp pickupchar
 beq increaselenght
 cmp #109
 beq gotoinit
+  cmp charsymb
+beq gotoinit
 rts
+
+
+
+
 colpg5
 ldx charposition
 lda $0500,x
@@ -561,6 +588,9 @@ cmp pickupchar
 beq increaselenght
 cmp #109
 beq gotoinit
+ cmp charsymb
+beq gotoinit
+ 
 rts
 colpg6
 ldx charposition
@@ -569,15 +599,21 @@ cmp pickupchar
 beq increaselenght
 cmp #109
 beq gotoinit
+  cmp charsymb
+beq gotoinit
+ 
+ 
 rts
 colpg7
 ldx charposition
 lda $0700,x
 cmp pickupchar
 beq increaselenght
- 
 cmp #109
 beq gotoinit
+  cmp charsymb
+beq gotoinit
+ 
 rts
 gotoinit
 jsr init
@@ -585,25 +621,86 @@ rts
 increaselenght
 inc lenght
 inc lenght
+ lda #1
+ sta soundstart
+
+regenpickup
  
-clc 
+jsr addpickuph
  
 lda pickupl
-bcs addpickuph 
-lda #1
-sta soundstart
+adc biting
+
+and #%01111110
+sta pickupl
+
+jsr pickupcollisioncheck
  
 rts
+pickupcollisioncheck
+lda pickupl
+cmp #255
+beq regenpickup 
+lda pickupl
+cmp #0
+ 
+beq regenpickup
+lda pickuph
+cmp #1
+beq pickupwallcolli4
+cmp #2
+beq pickupwallcolli5
+cmp #3
+beq pickupwallcolli6
+cmp #4
+beq pickupwallcolli7
+
+rts
+pickupwallcolli4
+ldx pickupl
+lda $0400,x
+cmp #109
+beq regenpickup
+ 
+rts
+pickupwallcolli5
+ldx pickupl
+lda $0500,x
+cmp #109
+beq regenpickup
+ 
+rts
+pickupwallcolli6
+ldx pickupl
+lda $0600,x
+cmp #109
+beq regenpickup
+ 
+rts
+pickupwallcolli7
+ldx pickupl
+lda $0700,x
+cmp #109
+beq regenpickup
+
+rts
+
+
+
+
+
+
 addpickuph
 inc pickuph
 lda pickuph
-cmp #8
+cmp #5
 beq resetpickuph
+
 rts
 resetpickuph
-lda #4
+lda #1
 sta pickuph
-
+ 
 rts
 
 
@@ -611,13 +708,13 @@ pickup
 ldx pickupl
 ldy pickuph
  
-cpy #4
+cpy #1
 beq pickuppg4
-cpy #5
+cpy #2
 beq pickuppg5
-cpy #6
+cpy #3
 beq pickuppg6
-cpy #7
+cpy #4
 beq pickuppg7
 
 rts
@@ -637,5 +734,15 @@ pickuppg7
 lda pickupchar
 sta $0700,x
 rts
+ 
+ 
+ 
+ 
+
+gotoinit2
+jsr init
+rts
+ 
+
  
 bits !byte 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,33,34,35,36
